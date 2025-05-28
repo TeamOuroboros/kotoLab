@@ -72,8 +72,8 @@ const logout = async (req, res) => {
 
 const register = async (req, res) => {
 	try {
-		const { mail, password, name } = req.body;
-		if (!validation(mail, password, name)) {
+		const { mail, password, name, address } = req.body;
+		if (!validation(mail, password, name, address)) {
 			return res.status(400).json({ message: 'フィールドが欠損しています' });
 		}
 		const exitUser = await User.findUser(mail);
@@ -82,7 +82,7 @@ const register = async (req, res) => {
 		}
 
 		const passwordHash = await bcrypt.hash(password, 10);
-		const newUser = await User.createUser(mail, passwordHash, name);
+		const newUser = await User.createUser(mail, passwordHash, name, address);
 		return res.status(201).json({
 			message: 'ユーザー登録に成功しました',
 			newUserEmail: newUser[0].mail,

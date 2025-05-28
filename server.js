@@ -12,9 +12,12 @@ app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
 
-app.listen(PORT, () => {
-	console.log(`Server running on port ${PORT}`);
+// app.listen(PORT, () => {
+// 	console.log(`Server running on port ${PORT}`);
+// });
 
-	// const userController = require('./server/src/controllers/users.controller');
-	// app.get('/api', userController.allGet);
-});
+// const userController = require('./server/src/controllers/userscontroller');
+// app.get('/api', userController.allGet);
+
+
+module.exports = app;

@@ -10,7 +10,7 @@ const authenticate = async (req, res, next) => {
   if (!session || session.expires_at < new Date()) {
     return res.status(401).json({ message: '無効なセッション' });
   }
-  req.user = { id: session.user_id, email: session.email };
+  req.user = { id: session.user_id, mail: session.mail };
   next();
 };
 
