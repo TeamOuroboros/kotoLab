@@ -1,4 +1,4 @@
-const db = require('../knex');
+const db = require('../../db/knex');
 const USERS = 'users';
 
 module.exports = {
@@ -7,6 +7,4 @@ module.exports = {
 	async all() {
 		return await db(USERS);
 	},
-
-	
 };
