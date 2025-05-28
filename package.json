@@ -10,7 +10,7 @@
 		"migrate-make": "npx knex migrate:make --knexfile server/db/knexfile.js",
 		"seed-data": "npx knex seed:run --knexfile server/db/knexfile.js",
 		"seed-make": "npx knex seed:make --knexfile server/db/knexfile.js",
-    "db:reset": "npx knex migrate:rollback --all --knexfile server/db/knexfile.js && npm run migrate-latest && npm run seed-data",
+		"db:reset": "npx knex migrate:rollback --all --knexfile server/db/knexfile.js && npm run migrate-latest && npm run seed-data",
 		"build": "npm install && npm run db:reset && cd client && npm install && npm run build && rm -rf ../public && cp -r dist ../public"
 	},
 	"keywords": [],
@@ -18,12 +18,19 @@
 	"license": "ISC",
 	"description": "",
 	"dependencies": {
+		"4": "^0.0.0",
+		"bcrypt": "^6.0.0",
+		"cookie-parser": "^1.4.7",
+		"crypto": "^1.0.1",
 		"dotenv": "^16.5.0",
 		"express": "^5.1.0",
 		"knex": "^3.1.0",
 		"pg": "^8.16.0"
 	},
 	"devDependencies": {
+		"chai": "^4.5.0",
+		"chai-http": "^4.4.0",
+		"mocha": "^11.5.0",
 		"nodemon": "^3.1.10"
 	}
 }
