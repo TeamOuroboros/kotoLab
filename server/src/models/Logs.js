@@ -12,8 +12,6 @@ module.exports = {
 	},
 
 	async insChildLog(insertData) {
-        console.log("🙅🏻",insertData);
-        
 		return await db(LOG_CHILD_TABLE).insert(insertData);
 	},
 };
