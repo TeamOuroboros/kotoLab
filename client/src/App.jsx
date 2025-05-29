@@ -5,11 +5,12 @@ import './App.css';
 
 function App() {
 	const [count, setCount] = useState(0);
-	async function userData() {
-		const data = await fetch('/api').then((res) => res.json());
-		console.log('🍓 ~ userData ~ data:', data);
-	}
-	userData();
+	// async function userData() {
+	// 	const data = await fetch('/api').then((res) => res.json());
+	// 	console.log('🍓 ~ userData ~ data:', data);
+	// }
+	// userData();
+
 
 	return <></>;
 }
