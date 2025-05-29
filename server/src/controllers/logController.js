@@ -39,7 +39,6 @@ const addChildLog = async (req, res) => {
 			children_id,
 			child_state,
 		});
-		console.log('🍟');
 
 		return res.status(201).json({ message: 'ログの追加に成功しました' });
 	} catch (error) {
