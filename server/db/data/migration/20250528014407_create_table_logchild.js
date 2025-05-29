@@ -5,7 +5,7 @@ exports.up = async (knex) => {
     table.foreign('log_id').references('log.id').onDelete('CASCADE');
     table.integer('children_id').notNullable();
     table.foreign('children_id').references('children.id').onDelete('CASCADE');
-    table.string('child_state').notNullable();
+    table.text('child_state').notNullable();
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now());
   });
 };

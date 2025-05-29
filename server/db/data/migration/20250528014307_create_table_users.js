@@ -3,7 +3,7 @@ exports.up = async (knex) => {
     table.increments('id').primary();
     table.string('mail').notNullable().unique();
     table.string('name').notNullable();
-    table.string('password_hash').notNullable();
+    table.text('password_hash').notNullable();
     table.string('address').notNullable();
     table.timestamp('created_at', { useTz: true }).defaultTo(knex.fn.now());
   });
