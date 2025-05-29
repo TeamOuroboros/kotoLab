@@ -29,17 +29,18 @@ const addParentLog = async (req, res) => {
 const addChildLog = async (req, res) => {
 	try {
 		const { children_id, child_state, user_id, log_date } = req.body;
-
+		
 		if (!validation(children_id, child_state, user_id, log_date)) {
 			return res.status(400).json({ message: 'フィールドが欠損しています' });
 		}
+		
 		const logId = await logModel.findLogId(user_id, log_date);
 		await logModel.insChildLog({
 			log_id: logId.id,
 			children_id,
 			child_state,
 		});
-
+		
 		return res.status(201).json({ message: 'ログの追加に成功しました' });
 	} catch (error) {
 		return res.status(500).json({ message: 'Server Error' });
