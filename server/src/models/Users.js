@@ -8,15 +8,17 @@ module.exports = {
 		return db(USERS_TABLE);
 	},
 
-	async createUser(mail, password_hash, name, address) {
+	async createUser(mail, password_hash, name, address, lat, lon) {
 		return await db(USERS_TABLE)
-			.insert({
-				mail,
-				name,
-				password_hash,
-				address,
-			})
-			.returning(['mail', 'name']);
+		.insert({
+			mail,
+			name,
+			password_hash,
+			address,
+			lat,
+			lon,
+		})
+		.returning(['mail', 'name', 'id']);
 	},
 
 	async findUser(mail) {
