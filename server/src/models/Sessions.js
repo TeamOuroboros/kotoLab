@@ -16,7 +16,7 @@ module.exports = {
 	async findToken(token) {
 		return await db(SESSIONS_TABLE)
 			.innerJoin('users', function () {
-				this.on(`${SESSIONS_TABLE}.use_id`, '=', 'users.id');
+				this.on(`${SESSIONS_TABLE}.user_id`, '=', 'users.id');
 			})
 			.where('token', token)
 			.first();

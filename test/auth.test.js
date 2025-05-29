@@ -32,6 +32,8 @@ describe('authController', () => {
 		name: 'mocha',
 		password: 'password12345',
 		address: 'toyota',
+		lat: 111.1111111,
+		lon: 111.1111111,
 	};
 
 	describe('register', () => {
