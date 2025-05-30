@@ -1,5 +1,5 @@
-:root {
-  /* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+/* :root { */
+/* font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
@@ -11,8 +11,8 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; */
-  /* flex-direction: column; */
-}
+/* flex-direction: column; */
+/* } */
 
 /* a {
   font-weight: 500;
@@ -24,20 +24,18 @@ a:hover {
 } */
 
 body {
-  /* margin: 0; */
-  /* display: flex; */
-  /* place-items: center; */
-  /* min-width: 320px;
-  min-height: 100vh; */
+  margin: 0;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  /* backgroudcolorと中央設定 */
+  /* background-color: #fffcf7;
   width: 390px;
   height: 844px;
-  background-color: #fffcf7;
-  justify-content: center;
-  align-items: center;
-  margin: 0 auto;
+  margin: 0 auto; */
 }
-
-/* h1 {
+h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
@@ -53,7 +51,7 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
+/* button:hover {
   border-color: #646cff;
 }
 button:focus,
