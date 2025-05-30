@@ -18,7 +18,6 @@ const authMe = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { mail, password } = req.body;
-    console.log("🚀 ~ login ~ req.body:", req.body);
     if (!validation(mail, password)) {
       return res.status(400).json({ message: "フィールドが欠損しています" });
     }

@@ -4,72 +4,89 @@ import { useNavigate } from "react-router";
 
 import {
   Container,
-  VStack,
-  Heading,
-  FormControl,
-  Label,
-  Input,
+  Box,
+  TextField,
   Button,
-  PasswordInput,
-} from "@yamada-ui/react";
+  Typography,
+  ToggleButtonGroup,
+  ToggleButton,
+} from "@mui/material";
 
 function ChildRegister() {
-  const [childNmae, setChildNmae] = useState("");
+  const [childName, setChildName] = useState("");
   const [birthday, setBirthday] = useState("");
+  const [gender, setGender] = useState("");
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
 
   const processingRegisterChild = async () => {
     try {
-      await axios.post("/api/auth/login", { username, password });
-      navigate("/records"); //
+      await axios.post("/api/children", {
+        name: childName,
+        gender,
+        birthday,
+      });
+      alert("子供の登録に成功しました。");
+      navigate("/main");
     } catch (err) {
-      alert("ログイン失敗");
+      alert("登録失敗");
       console.error(err);
     }
   };
 
+  const genderChange = async (e, newGender) => {
+    if (newGender !== null) {
+      setGender(newGender);
+    }
+  };
+
   return (
-    <Container maxW="xs" mt="16">
-      <VStack
-        spacing="6"
-        as="form"
+    <Container max="xs" mt="16">
+      <Box
+        component="form"
         onSubmit={(e) => {
           e.preventDefault();
           processingRegisterChild();
         }}
       >
-        <Heading as="h1" size="lg" textAlign={"center"}>
-          ログイン
-        </Heading>
+        <Typography variant="h4" textAlign={"center"}>
+          子供を登録
+        </Typography>
 
-        <FormControl label="子供の名前">
-          <Input
-            placeholder="名前を入力"
-            value={email}
-            onChange={(e) => setChildNmae(e.target.value)}
-          />
-        </FormControl>
+        <TextField
+          label="子供の名前"
+          placeholder="名前を入力"
+          value={childName}
+          onChange={(e) => setChildName(e.target.value)}
+          fullWidth
+        ></TextField>
+        <TextField
+          label="誕生日"
+          placeholder="YYYY/MM/DD"
+          value={birthday}
+          onChange={(e) => setBirthday(e.target.value)}
+          fullWidth
+        ></TextField>
 
-        <FormControl label="誕生日">
-          <Input
-            placeholder="YYYY/MM/DD"
-            value={password}
-            onChange={(e) => setBirthday(e.target.value)}
-          />
-        </FormControl>
+        <Box>
+          <Typography variant="h4" textAlign={"center"}>
+            性別を選択
+          </Typography>
+          <ToggleButtonGroup
+            color="primary"
+            value={gender}
+            exclusive
+            onChange={genderChange}
+            fullWidth
+          >
+            <ToggleButton value="男の子">男の子</ToggleButton>
+            <ToggleButton value="女の子">女の子</ToggleButton>
+          </ToggleButtonGroup>
+        </Box>
 
-        <FormControl label="性別">
-          <Input
-            placeholder="YYYY/MM/DD"
-            value={password}
-            onChange={(e) => setBirthday(e.target.value)}
-          />
-        </FormControl>
-
-        <Button type="submit" colorScheme="primary" width="full">
+        <Button type="submit" fullWidth variant="contained">
           登録
         </Button>
-      </VStack>
+      </Box>
     </Container>
   );
 }
