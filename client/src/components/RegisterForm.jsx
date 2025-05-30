@@ -1,16 +1,18 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router";
+import { useNavigate } from "react-router";
 
 import {
   Container,
   VStack,
   Heading,
   FormControl,
-  Label,
+  Select,
   Input,
   Button,
   PasswordInput,
+  OptionGroup,
+  Option,
 } from "@yamada-ui/react";
 
 function RegisterForm() {
@@ -20,9 +22,34 @@ function RegisterForm() {
   const [region, setRegion] = useState("");
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
 
+  const getLocation = async (region) => {
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${adress}`;
+    try {
+      const res = axios.get(url);
+      if (res.data && res.data.length > 0) {
+        const { lat, lon } = (await res).data[0];
+        return { lat, lon };
+      } else {
+        throw new Error("住所から緯度経度が見つかりませんでした");
+      }
+    } catch (err) {
+      console.error("位置の取得に失敗", err);
+      throw err;
+    }
+  };
+
   const processingRegister = async () => {
     try {
-      await axios.post("/api/auth/register", { username, email, password });
+      const { lat, lon } = await getLocation(region);
+
+      await axios.post("/api/auth/register", {
+        username,
+        email,
+        password,
+        adress: region,
+        lat,
+        lon,
+      });
       alert("登録に成功しました。ログインしてください。");
       navigate("/login");
     } catch (err) {
@@ -41,7 +68,7 @@ function RegisterForm() {
           processingRegister();
         }}
       >
-        <Heading as="h1" size="lg" textAlign={"center"}>
+        <Heading as="h2" size="lg" textAlign={"center"}>
           アカウント作成
         </Heading>
 
@@ -70,12 +97,27 @@ function RegisterForm() {
           />
         </FormControl>
 
-        <FormControl label="居住地">
-          <Input
+        <FormControl label="居住地を選択">
+          <Select
             placeholder="居住地を選択"
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-          />
+            placeholderInOptions={false}
+          >
+            <OptionGroup label="東京">
+              <Option value="新宿区">新宿区</Option>
+              <Option value="港区">港区</Option>
+              <Option value="台東区">台東区</Option>
+            </OptionGroup>
+            <OptionGroup label="愛知県">
+              <Option value="名古屋市">名古屋市</Option>
+              <Option value="豊田市">豊田市</Option>
+              <Option value="安城市">安城市</Option>
+              <Option value="岡崎市">岡崎市</Option>
+              <Option value="豊橋市">豊橋市</Option>
+              <Option value="半田市">半田市</Option>
+            </OptionGroup>
+          </Select>
         </FormControl>
 
         <Button type="submit" fullWidth color="primary">
