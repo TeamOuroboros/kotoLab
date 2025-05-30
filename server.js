@@ -1,7 +1,8 @@
 const path = require("path");
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
-const PORT = process.env.PORT || 3000;
 const cookieParser = require("cookie-parser");
 
 const authRouter = require("./server/src/routes/authRoutes");
@@ -12,6 +13,7 @@ const contactRouter = require("./server/src/routes/contactRoutes");
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(cookieParser());
+app.use(cors());
 
 app.use("/api/auth", authRouter);
 app.use("/api/children", childrenRouter);

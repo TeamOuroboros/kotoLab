@@ -4,16 +4,16 @@ import { useNavigate } from "react-router";
 
 import {
   Container,
-  VStack,
-  Heading,
-  FormControl,
-  Select,
-  Input,
+  Box,
+  TextField,
   Button,
-  PasswordInput,
-  OptionGroup,
-  Option,
-} from "@yamada-ui/react";
+  MenuItem,
+  Typography,
+  FormControl,
+  InputLabel,
+  ListSubheader,
+  Select,
+} from "@mui/material";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -23,11 +23,12 @@ function RegisterForm() {
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
 
   const getLocation = async (region) => {
-    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${adress}`;
+    const url = `https://nominatim.openstreetmap.org/search?format=json&q=${region}`;
     try {
-      const res = axios.get(url);
+      const res = await axios.get(url);
+
       if (res.data && res.data.length > 0) {
-        const { lat, lon } = (await res).data[0];
+        const { lat, lon } = res.data[0];
         return { lat, lon };
       } else {
         throw new Error("住所から緯度経度が見つかりませんでした");
@@ -41,12 +42,12 @@ function RegisterForm() {
   const processingRegister = async () => {
     try {
       const { lat, lon } = await getLocation(region);
-
+      console.log("🚀 ~ processingRegister ~ lat:", lat);
       await axios.post("/api/auth/register", {
-        username,
-        email,
+        name: username,
+        mail: email,
         password,
-        adress: region,
+        address: region,
         lat,
         lon,
       });
@@ -54,76 +55,68 @@ function RegisterForm() {
       navigate("/login");
     } catch (err) {
       alert("登録失敗");
-      console.err(err);
+      console.error(err);
     }
   };
 
   return (
     <Container maxWidth="xs">
-      <VStack
-        spacing="6"
-        as="form"
+      <Box
+        component="form"
         onSubmit={(e) => {
           e.preventDefault();
           processingRegister();
         }}
       >
-        <Heading as="h2" size="lg" textAlign={"center"}>
+        <Typography variant="h4" textAlign={"center"}>
           アカウント作成
-        </Heading>
+        </Typography>
 
-        <FormControl label="ニックネーム">
-          <Input
-            placeholder="ニックネームを入力"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </FormControl>
+        <TextField
+          label="ニックネーム"
+          placeholder="ニックネームを入力"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          fullWidth
+        ></TextField>
 
-        <FormControl label="メールアドレス">
-          <Input
-            type="email"
-            placeholder="メールアドレスを入力"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </FormControl>
+        <TextField
+          label="メールアドレス"
+          type="email"
+          placeholder="メールアドレスを入力"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          fullWidth
+        ></TextField>
 
-        <FormControl label="パスワード">
-          <PasswordInput
-            placeholder="パスワード"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </FormControl>
+        <TextField
+          label="パスワード"
+          type="password"
+          placeholder="パスワード"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          fullWidth
+        ></TextField>
 
-        <FormControl label="居住地を選択">
+        <FormControl fullWidth>
+          <InputLabel>居住地</InputLabel>
           <Select
-            placeholder="居住地を選択"
             value={region}
             onChange={(e) => setRegion(e.target.value)}
-            placeholderInOptions={false}
+            label="居住地"
           >
-            <OptionGroup label="東京">
-              <Option value="新宿区">新宿区</Option>
-              <Option value="港区">港区</Option>
-              <Option value="台東区">台東区</Option>
-            </OptionGroup>
-            <OptionGroup label="愛知県">
-              <Option value="名古屋市">名古屋市</Option>
-              <Option value="豊田市">豊田市</Option>
-              <Option value="安城市">安城市</Option>
-              <Option value="岡崎市">岡崎市</Option>
-              <Option value="豊橋市">豊橋市</Option>
-              <Option value="半田市">半田市</Option>
-            </OptionGroup>
+            <ListSubheader>東京都</ListSubheader>
+            <MenuItem value="新宿">新宿区</MenuItem>
+            <ListSubheader>愛知県</ListSubheader>
+            <MenuItem value="豊田市">豊田市</MenuItem>
+            <MenuItem value="岡崎市">岡崎市</MenuItem>
           </Select>
         </FormControl>
 
-        <Button type="submit" fullWidth color="primary">
+        <Button type="submit" variant="contained" fullWidth>
           アカウント作成
         </Button>
-      </VStack>
+      </Box>
     </Container>
   );
 }

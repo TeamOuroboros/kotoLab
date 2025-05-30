@@ -19,7 +19,7 @@ function LoginForm() {
 
   const processingLogin = async () => {
     try {
-      await axios.post("/api/auth/login", { username, password });
+      await axios.post("/api/auth/login", { mail: email, password });
       navigate("/register/children"); //
     } catch (err) {
       alert("ログイン失敗");
@@ -67,11 +67,10 @@ function LoginForm() {
         <Button type="submit" colorScheme="primary" width="full">
           ログイン
         </Button>
-
-        <Button type="submit" colorScheme="primary" onClick={googleLogin}>
-          Googleでログイン
-        </Button>
       </VStack>
+      <Button type="submit" colorScheme="primary" onClick={googleLogin}>
+        Googleでログイン
+      </Button>
     </Container>
   );
 }
