@@ -6,13 +6,15 @@ const cookieParser = require('cookie-parser');
 
 const authRouter = require('./server/src/routes/authRoutes');
 const childrenRouter = require('./server/src/routes/childrenRoutes');
+const logRouter = require('./server/src/routes/logRoutes');
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(cookieParser());
 
 app.use('/api/auth', authRouter);
-app.use('/api/children',childrenRouter);
+app.use('/api/children', childrenRouter);
+app.use('/api/log', logRouter);
 
 // app.listen(PORT, () => {
 // 	console.log(`Server running on port ${PORT}`);
@@ -20,6 +22,5 @@ app.use('/api/children',childrenRouter);
 
 // const userController = require('./server/src/controllers/userscontroller');
 // app.get('/api', userController.allGet);
-
 
 module.exports = app;
