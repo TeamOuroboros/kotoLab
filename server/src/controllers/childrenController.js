@@ -7,7 +7,9 @@ const validation = (...args) => {
 const addChild = async (req, res) => {
   try {
     console.log("🚀 ~ addChild ~ req.body:", req.body);
-    const { name, birthday, gender, user_id } = req.body;
+    const user_id = req.user.id
+    console.log("🚀 ~ addChild ~ user_id:", user_id)
+    const { name, birthday, gender } = req.body;
     if (!validation(name, birthday, gender, user_id)) {
       return res.status(400).json({ message: "フィールドが欠損しています" });
     }

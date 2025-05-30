@@ -2,30 +2,19 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
-// import {
-//   Container,
-//   Box,
-//   TextField,
-//   Button,
-//   MenuItem,
-//   Typography,
-//   FormControl,
-//   InputLabel,
-//   ListSubheader,
-//   Select,
-// } from "@mui/material";
-
 import {
   Container,
   Box,
-  TextField,
-  Button,
-  MenuItem,
   Typography,
+  Button,
+  Stack,
+  TextField,
   FormControl,
   InputLabel,
-  ListSubheader,
   Select,
+  MenuItem,
+  ListSubheader,
+  OutlinedInput,
 } from "@mui/material";
 
 function RegisterForm() {
@@ -55,7 +44,6 @@ function RegisterForm() {
   const processingRegister = async () => {
     try {
       const { lat, lon } = await getLocation(region);
-      console.log("🚀 ~ processingRegister ~ lat:", lat);
       await axios.post("/api/auth/register", {
         name: username,
         mail: email,
@@ -73,7 +61,15 @@ function RegisterForm() {
   };
 
   return (
-    <Container maxWidth="xs">
+    <Container maxWidth="xs" 
+      sx={{
+        display: "flex",
+        flexDirection: "column", // 縦並び
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        px: 2,
+      }}>
       <Box
         component="form"
         onSubmit={(e) => {
@@ -81,54 +77,55 @@ function RegisterForm() {
           processingRegister();
         }}
       >
-        <Typography variant="h4" textAlign={"center"}>
+        <Typography variant="h4" align="center" gutterBottom>
           アカウント作成
         </Typography>
 
-        <TextField
-          label="ニックネーム"
-          placeholder="ニックネームを入力"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          fullWidth
-        ></TextField>
+        <Stack spacing={3}>
+          <TextField
+            label="ニックネーム"
+            placeholder="ニックネームを入力"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            fullWidth
+          />
 
-        <TextField
-          label="メールアドレス"
-          type="email"
-          placeholder="メールアドレスを入力"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          fullWidth
-        ></TextField>
+          <TextField
+            label="メールアドレス"
+            type="email"
+            placeholder="メールアドレスを入力"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            fullWidth
+          />
 
-        <TextField
-          label="パスワード"
-          type="password"
-          placeholder="パスワード"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          fullWidth
-        ></TextField>
+          <TextField
+            label="パスワード"
+            type="password"
+            placeholder="パスワードを入力"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            fullWidth
+          />
 
-        <FormControl fullWidth>
-          <InputLabel>居住地</InputLabel>
-          <Select
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-            label="居住地"
-          >
-            <ListSubheader>東京都</ListSubheader>
-            <MenuItem value="新宿">新宿区</MenuItem>
-            <ListSubheader>愛知県</ListSubheader>
-            <MenuItem value="豊田市">豊田市</MenuItem>
-            <MenuItem value="岡崎市">岡崎市</MenuItem>
-          </Select>
-        </FormControl>
+          <FormControl fullWidth>
+            <InputLabel id="region-label">居住地</InputLabel>
+            <Select
+              labelId="region-label"
+              value={region}
+              onChange={(e) => setRegion(e.target.value)}
+              input={<OutlinedInput label="居住地" />}
+            >
+              <ListSubheader>東京都</ListSubheader>
+              <MenuItem value="新宿">新宿区</MenuItem>
+              <ListSubheader>愛知県</ListSubheader>
+              <MenuItem value="豊田市">豊田市</MenuItem>
+              <MenuItem value="岡崎市">岡崎市</MenuItem>
+            </Select>
+          </FormControl>
 
-        <Button type="submit" variant="contained" fullWidth>
-          アカウント作成
-        </Button>
+          <Button type="submit">アカウント作成</Button>
+        </Stack>
       </Box>
     </Container>
   );
