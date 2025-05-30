@@ -1,7 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-// import LoginForm from "./components/LoginForm.jsx";
-// import RegisterForm from "./components/RegisterForm.jsx";
+import LoginForm from "./components/LoginForm.jsx";
+import StartForm from "./components/StartForm.jsx";
+import RegisterForm from "./components/RegisterForm.jsx";
+import ChildRegister from "./components/ChildRegister.jsx";
 import { BrowserRouter, Route, Navigate, Routes } from "react-router";
 import SettingMain from "./components/SettingMain";
 import { Suggetion } from "./components/Suggetion.jsx";
@@ -12,10 +14,11 @@ import ConfirmChild from "./components/ConfirmChild";
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <Routes>
-      {/* <Route path="/" element={<Navigate to="/login" />} /> */}
-      {/* <Route path="/login" element={<LoginForm />} /> */}
-      {/* <Route path="/register" element={<RegisterForm />} /> */}
-      {/* <Route path="/records" element={<App />} /> */}
+      <Route path="/" element={<StartForm />} />
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="/register" element={<RegisterForm />} />
+      <Route path="/register/children" element={<ChildRegister />} />
+      <Route path="/main" element={<App />} />
       {/* 必要時は以下に各自でRouteを追加 */}
       <Route path="/setting" element={<SettingMain />} />
       <Route path="/suggetion" element={<Suggetion />} />
