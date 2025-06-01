@@ -10,7 +10,7 @@ function State() {
     navigate("/main");
   }
   function goToFeeling() {
-    navigate("/main/feeling"); //⚡️⚡️パスは後で擦り合わせ
+    navigate("/main/feeling");
   }
   return (
     <>

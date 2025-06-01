@@ -1,55 +1,110 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Text, Button, Icon } from "@yamada-ui/react";
 import { MdWbSunny, MdNightsStay, MdSettings } from "react-icons/md";
 import { useNavigate } from "react-router";
 import axios from "axios";
 
 function App() {
-  const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
+  const [weather, setWeather] = useState("Clear");
+  const [maxTemperature, setMaxTemperature] = useState("");
+  const [minTemperature, setMinTemperature] = useState("");
+  const [icon, setIcon] = useState("");
+  const [todayFist, setFistData] = useState({});
+  const [todayLast, setLastData] = useState({});
+  const [formatted, setformatted] = useState("");
+  const navigate = useNavigate();
 
-  function goToProposal() {
-    navigate("/main/proposal"); //⚡️⚡️パスは後で擦り合わせ
-  }
+  // function goToProposal() {
+  //   navigate("/main/proposal");
+  // }
 
   function goToFeeling() {
-    navigate("/main/feeling"); //⚡️⚡️パスは後で擦り合わせ
+    navigate("/main/feeling");
   }
   function goToSettings() {
     navigate("/setting");
   }
+  //天気情報を取得する関数
+  const handleSubmit = async () => {
+    const { latitude, longitude } = await new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve(position.coords),
+        (error) => reject(error)
+      );
+    });
+    const resWeather = await axios.get("/api/weather", {
+      params: { latitude, longitude },
+    });
+    // console.log("🙆‍♀️☀️バックエンドからの天気レスポンス:", resWeather.data);
+    const {
+      weather,
+      maxTemperature,
+      minTemperature,
+      icon,
+      todayFist,
+      todayLast,
+      formatted,
+    } = resWeather.data;
+    // console.log(
+    //   "🚀 ~ handleSubmit ~ weather, maxTemperature, minTemperature:",
+    //   weather,
+    //   maxTemperature,
+    //   minTemperature,
+    //   icon,
+    //   todayFist,
+    //   todayLast,
+    //   formatted
+    // );
+    setWeather(weather);
+    setMaxTemperature(maxTemperature);
+    setMinTemperature(minTemperature);
+    setIcon(icon);
+    setFistData(todayFist);
+    setLastData(todayLast);
+    setformatted(formatted);
+  };
 
   const contactRequest = async () => {
-    console.log("🚀 ~ contactRequest呼ばれたよ");
+    try {
+      const res = await axios.post(
+        "/api/contact",
+        {
+          weather,
+          maxTemperature,
+          minTemperature,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          //session_token自動付与する
+          withCredentials: true,
+        }
+      );
+      const resText = res.data.contactResult;
 
-    const res = await axios
-      .post("/api/contact")
-      .Set("Cookie", `session_token=12345`)
-      .send({
-        weather: "晴れ",
-        maxTemperture: "40度",
-        minTemperture: "25度",
+      // 成功したら画面遷移　　goToProposalらは一旦コメントアウト
+      navigate("/main/proposal", {
+        state: { resText: resText },
       });
-
-    goToProposal();
-    console.log("🚀 ~ contactRequest ~ res.body:", res.body);
-    console.log("🚀 ~ contactRequest ~ res.statusCode:", res.statusCode);
+      // goToProposal();
+    } catch (error) {
+      console.error("❌contactRequest", error.response || error);
+    }
   };
-  //   const handleClick = async () => {
-  //     await contactRequest();
-  //     goToProposal();
-  //   };
-
+  useEffect(() => {
+    handleSubmit();
+  }, []);
   return (
     <Box>
-      {/* 日時温度 ======================================================⚡️⚡️後でこれからAPIのデータ元に作成しまーす*/}
       <Box textAlign="center" display="flex">
         <Text fontWeight="bold" fontSize="20px" verticalAlign="middle">
-          5/10 ☀️
+          {formatted} {icon}
         </Text>
-        <Text ml="auto">
-          <Icon as={MdWbSunny} verticalAlign="middle" fontSize="15px" /> 25°C /
-          {"  "}
-          <Icon as={MdNightsStay} verticalAlign="middle" fontSize="15px" /> 12°C
+        <Text ml="auto" verticalAlign="middle" fontSize="15px">
+          {todayFist.todayFirstIcon}
+          {todayFist.todayFirstTemp} / {todayLast.todayLastIcon}
+          {todayLast.todayLastTemp}
         </Text>
       </Box>
 
