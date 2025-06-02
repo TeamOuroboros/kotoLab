@@ -10,6 +10,7 @@ import {
   Typography,
   ToggleButtonGroup,
   ToggleButton,
+  Stack,
 } from "@mui/material";
 
 function ChildRegister() {
@@ -34,13 +35,25 @@ function ChildRegister() {
   };
 
   const genderChange = async (e, newGender) => {
+    // console.log("🚀 ~ ChildRegister ~ gender:", e, newGender);
+
     if (newGender !== null) {
       setGender(newGender);
     }
   };
 
   return (
-    <Container max="xs" mt="16">
+    <Container
+      maxWidth="xs"
+      sx={{
+        display: "flex",
+        flexDirection: "column", // 縦並び
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        px: 2,
+      }}
+    >
       <Box
         component="form"
         onSubmit={(e) => {
@@ -48,44 +61,44 @@ function ChildRegister() {
           processingRegisterChild();
         }}
       >
-        <Typography variant="h4" textAlign={"center"}>
+        <Typography variant="h4" align="center" gutterBottom>
           子供を登録
         </Typography>
 
-        <TextField
-          label="子供の名前"
-          placeholder="名前を入力"
-          value={childName}
-          onChange={(e) => setChildName(e.target.value)}
-          fullWidth
-        ></TextField>
-        <TextField
-          label="誕生日"
-          placeholder="YYYY/MM/DD"
-          value={birthday}
-          onChange={(e) => setBirthday(e.target.value)}
-          fullWidth
-        ></TextField>
-
-        <Box>
-          <Typography variant="h4" textAlign={"center"}>
-            性別を選択
-          </Typography>
-          <ToggleButtonGroup
-            color="primary"
-            value={gender}
-            exclusive
-            onChange={genderChange}
+        <Stack spacing={3}>
+          <TextField
+            label="子供の名前"
+            placeholder="名前を入力"
+            value={childName}
+            onChange={(e) => setChildName(e.target.value)}
             fullWidth
-          >
-            <ToggleButton value="男の子">男の子</ToggleButton>
-            <ToggleButton value="女の子">女の子</ToggleButton>
-          </ToggleButtonGroup>
-        </Box>
+          />
+          <TextField
+            label="誕生日"
+            placeholder="YYYY/MM/DD"
+            value={birthday}
+            onChange={(e) => setBirthday(e.target.value)}
+            fullWidth
+          />
 
-        <Button type="submit" fullWidth variant="contained">
-          登録
-        </Button>
+          <Box>
+            <Typography variant="subtitle1" gutterBottom>
+              性別を選択
+            </Typography>
+            <ToggleButtonGroup
+              color="primary"
+              value={gender}
+              exclusive
+              onChange={genderChange}
+              fullWidth
+            >
+              <ToggleButton value="男の子">男の子</ToggleButton>
+              <ToggleButton value="女の子">女の子</ToggleButton>
+            </ToggleButtonGroup>
+          </Box>
+
+          <Button type="submit">登録</Button>
+        </Stack>
       </Box>
     </Container>
   );
