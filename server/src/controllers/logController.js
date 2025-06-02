@@ -30,7 +30,9 @@ const addParentLog = async (req, res) => {
 
 const addChildLog = async (req, res) => {
   try {
-    const { children_id, child_state, user_id, log_date } = req.body;
+    const user_id = req.user.id;
+
+    const { children_id, child_state, log_date } = req.body;
 
     if (!validation(children_id, child_state, user_id, log_date)) {
       return res.status(400).json({ message: "フィールドが欠損しています" });

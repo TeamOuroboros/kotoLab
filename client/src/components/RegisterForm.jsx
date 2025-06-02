@@ -44,7 +44,6 @@ function RegisterForm() {
   const processingRegister = async () => {
     try {
       const { lat, lon } = await getLocation(region);
-      console.log("🚀 ~ processingRegister ~ lat:", lat);
       await axios.post("/api/auth/register", {
         name: username,
         mail: email,
@@ -53,8 +52,16 @@ function RegisterForm() {
         lat,
         lon,
       });
-      alert("登録に成功しました。ログインしてください。");
-      navigate("/login");
+      alert("登録に成功しました。");
+
+      //登録後、ログイン
+      await axios.post("/api/auth/login", {
+        mail: email,
+        password,
+      });
+
+      //子供登録へ
+      navigate("/register/children");
     } catch (err) {
       alert("登録失敗");
       console.error(err);

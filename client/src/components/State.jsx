@@ -1,46 +1,70 @@
-import React from "react";
-import { Box, Text, Button, Icon } from "@yamada-ui/react";
-import { MdWbSunny, MdNightsStay, MdSettings } from "react-icons/md";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router";
-import { FaHome } from "react-icons/fa";
-
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Stack,
+  IconButton,
+  TextField,
+} from "@mui/material";
+import { ArrowBack, ArrowForward, Home } from "@mui/icons-material";
 function State() {
+  const [text, setText] = useState("");
+  const [children, setChildren] = useState([]);
   const navigate = useNavigate();
-  function goToMain() {
-    navigate("/main");
-  }
-  function goToFeeling() {
-    navigate("/main/feeling");
-  }
+
+  const stateSubmit = async () => {
+    try {
+      await axios.post("/api/log/childstate", {
+        children_id: children[0].id,
+        child_state: text,
+        log_date: new Date(),
+      });
+      alert("お子さんの状態わかりました。");
+      navigate("/main");
+    } catch (err) {
+      alert("保存に失敗しました");
+      console.error(err);
+    }
+  };
+
+  const getChidlren = async () => {
+    const res = await axios.get("/api/children");
+    setChildren(res.data);
+  };
+
+  useEffect(() => {
+    getChidlren();
+  }, []);
+
   return (
-    <>
-      <h1>Stateページ</h1>
-      <Button
-        bg="#bcd4c1"
-        w="180"
-        h="80"
-        _hover={{ bg: "#a7c8b1" }}
-        rounded="full"
-        onClick={goToFeeling}
-      >
-        ←
-      </Button>
-      <Button
-        position="fixed"
-        right="40px"
-        bottom="30px"
-        bg="#bcd4c1"
-        px={5}
-        py={4}
-        borderRadius="full"
-        boxShadow="md"
-        _hover={{ bg: "#a7c8b1" }}
-        onClick={goToMain}
-        fontSize="30px"
-      >
-        🏠
-      </Button>
-    </>
+    <Container>
+      <Stack spacing={4} alignItems={"center"}>
+        <Typography>{}ちゃんのようすは？</Typography>
+
+        <TextField
+          placeholder="様子を入力（省略可）"
+          multiline
+          minRows={10}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+        />
+        <IconButton onClick={stateSubmit}>
+          <ArrowForward />
+        </IconButton>
+        <Stack direction={"row"}>
+          <IconButton onClick={() => navigate(-1)}>
+            <ArrowBack />
+          </IconButton>
+          <IconButton onClick={() => navigate("/main")}>
+            <Home />
+          </IconButton>
+        </Stack>
+      </Stack>
+    </Container>
   );
 }
 

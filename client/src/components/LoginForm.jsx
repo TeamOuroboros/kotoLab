@@ -24,8 +24,18 @@ function LoginForm() {
 
   const processingLogin = async () => {
     try {
-      await axios.post("/api/auth/login", { mail: email, password });
-      navigate("/register/children"); //
+      await axios.post("/api/auth/login", {
+        mail: email,
+        password,
+      });
+
+      const res = await axios.get("/api/children");
+
+      if (res.data.length > 0) {
+        navigate("/main"); //子供の登録があればメイン画面遷移
+      } else {
+        navigate("/register/children"); //子供の登録なければ子供登録
+      }
     } catch (err) {
       alert("ログイン失敗");
       console.error(err);
