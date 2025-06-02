@@ -11,7 +11,7 @@ function settingMain() {
     navigate("/main");
   }
   function goToAddChild() {
-    navigate("/addchild");
+    navigate("/register/children");
   }
   function goToComfirmChild() {
     navigate("/confirmchild");
