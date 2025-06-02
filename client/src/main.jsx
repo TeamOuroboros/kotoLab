@@ -13,11 +13,8 @@ import SettingMain from "./components/SettingMain";
 import { Suggetion } from "./components/Suggetion.jsx";
 import "./index.css";
 import App from "./App.jsx";
-<<<<<<< HEAD
-import FeelingOfParents from "./components/FeelingOfParents.jsx";
-=======
 import ConfirmChild from "./components/ConfirmChild";
->>>>>>> 2fd2e61f5b88ffa41ffa6b84692439395a019c28
+import FeelingOfParents from "./components/FeelingOfParents.jsx";
 
 createRoot(document.getElementById("root")).render(
   <ThemeProvider theme={theme}>
