@@ -43,8 +43,9 @@ const deleteChild = async (req, res) => {
 
 const getChildren = async (req, res) => {
   // ここで欲しいidは親のuser_id
+  const user_id = req.user.id;
 
-  const children = await Children.findFamilyChildren(req.query.user_id);
+  const children = await Children.findFamilyChildren(user_id);
   return res.status(200).json(children);
 };
 module.exports = { addChild, deleteChild, getChildren };
