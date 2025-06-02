@@ -12,6 +12,7 @@ function AppLayout({ children }) {
         bgcolor: "background.default",
         color: "text.primary",
         overflow: "hidden",
+        overflowX: "hidden",
         border: "1px solid #ccc",
         display: "flex",
         flexDirection: "column",

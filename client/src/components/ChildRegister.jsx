@@ -50,7 +50,7 @@ function ChildRegister() {
         flexDirection: "column", // 縦並び
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: "100%",
         px: 2,
       }}
     >
@@ -61,24 +61,26 @@ function ChildRegister() {
           processingRegisterChild();
         }}
       >
-        <Typography variant="h4" align="center" gutterBottom>
-          子供を登録
+        <Typography variant="h4" align="center" mb={6}>
+          子どもの登録
         </Typography>
 
         <Stack spacing={3}>
           <TextField
-            label="子供の名前"
-            placeholder="名前を入力"
+            label="こどもの名前"
+            placeholder="👦名前を入力"
             value={childName}
             onChange={(e) => setChildName(e.target.value)}
             fullWidth
+            sx={{ color: "text.secondary" }}
           />
           <TextField
             label="誕生日"
-            placeholder="YYYY/MM/DD"
+            placeholder="📅YYYY/MM/DD"
             value={birthday}
             onChange={(e) => setBirthday(e.target.value)}
             fullWidth
+            sx={{ color: "text.secondary" }}
           />
 
           <Box>
@@ -92,12 +94,13 @@ function ChildRegister() {
               onChange={genderChange}
               fullWidth
             >
-              <ToggleButton value="男の子">男の子</ToggleButton>
-              <ToggleButton value="女の子">女の子</ToggleButton>
+              <ToggleButton value="男の子">🚹　おとこのこ</ToggleButton>
+              <ToggleButton value="女の子">🚺　おんなのこ</ToggleButton>
             </ToggleButtonGroup>
           </Box>
-
-          <Button type="submit">登録</Button>
+          <Box mt={4}>
+            <Button type="submit">登録</Button>
+          </Box>
         </Stack>
       </Box>
     </Container>
