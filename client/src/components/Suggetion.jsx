@@ -1,16 +1,19 @@
 import { useState } from "react";
-import { Box } from "@yamada-ui/react";
-import { Text } from "@yamada-ui/react";
+import { useNavigate } from "react-router";
+
 import {
+  Container,
+  Box,
+  Typography,
   Button,
-  SimpleGrid,
-  GridItem,
-  For,
+  Stack,
+  Card,
   Radio,
   RadioGroup,
-  Switch,
-} from "@yamada-ui/react";
-import { useNavigate } from "react-router";
+  CardContent,
+  FormControlLabel,
+} from "@mui/material";
+import { ArrowBack, ArrowForward, Home } from "@mui/icons-material";
 let sendAiMode = "おまかせ";
 
 function Suggetion() {
@@ -25,62 +28,91 @@ function Suggetion() {
   }
 
   return (
-    <>
-      <Box p="md" rounded="md" bg="primary">
-        <Text>提案について</Text>
-        <Text>AIである以上ばらつきがある可能性があります</Text>
-        <Box>
-          <Text>
-            おまかせ
-            <input
-              onClick={getAIMode}
-              type="radio"
-              name="setting"
-              value="おまかせ"
-            />
-          </Text>
-          <Text>過去の記録から満遍なく提案します</Text>
-        </Box>
-        <Box>
-          <Text>
-            アクティブ
-            <input
-              onClick={getAIMode}
-              type="radio"
-              name="setting"
-              value="アクティブ"
-            />
-          </Text>
-          <Text>なるべく外遊びを提案します</Text>
-        </Box>
-        <Box>
-          <Text>
-            おうち
-            <input
-              onClick={getAIMode}
-              type="radio"
-              name="setting"
-              value="おうち"
-            />
-          </Text>
-          <Text>家の中でできる過ごし方を中心に提案します</Text>
-        </Box>
-        <Box>
-          <Text>
-            屋内
-            <input
-              onClick={getAIMode}
-              type="radio"
-              name="setting"
-              value="屋内"
-            />
-          </Text>
-          <Text>屋内施設で過ごせる提案をします</Text>
-        </Box>
+    <Container maxWidth="xs" sx={{ py: 4 }}>
+      <Stack spacing={3} alignItems={"center"}>
+        <Typography variant="h5" fontWeight={"bold"} textAlign={"center"}>
+          提案について
+        </Typography>
+
+        <Typography variant="body2" textAlign={"center"}>
+          AIである以上ばらつきがある可能性があります
+        </Typography>
+
+        <RadioGroup>
+          <Stack spacing={2}>
+            <Card variant="outlined">
+              <CardContent>
+                <FormControlLabel
+                  value="おまかせ"
+                  control={<Radio />}
+                  label={
+                    <>
+                      <Typography fontWeight={"bold"}>おまかせ</Typography>
+                      <Typography variant="body2">
+                        過去の記録から満遍なく提案します
+                      </Typography>
+                    </>
+                  }
+                />
+              </CardContent>
+            </Card>
+
+            <Card variant="outlined">
+              <CardContent>
+                <FormControlLabel
+                  value="アクティブ"
+                  control={<Radio />}
+                  label={
+                    <>
+                      <Typography fontWeight={"bold"}>アクティブ</Typography>
+                      <Typography variant="body2">
+                        なるべく外遊びを提案します
+                      </Typography>
+                    </>
+                  }
+                />
+              </CardContent>
+            </Card>
+
+            <Card variant="outlined">
+              <CardContent>
+                <FormControlLabel
+                  value="おうち"
+                  control={<Radio />}
+                  label={
+                    <>
+                      <Typography fontWeight={"bold"}> おうち</Typography>
+                      <Typography variant="body2">
+                        家の中でできる過ごし方を中心に提案します
+                      </Typography>
+                    </>
+                  }
+                />
+              </CardContent>
+            </Card>
+
+            <Card variant="outlined">
+              <CardContent>
+                <FormControlLabel
+                  value="屋内"
+                  control={<Radio />}
+                  label={
+                    <>
+                      <Typography fontWeight={"bold"}>屋内</Typography>
+                      <Typography variant="body2">
+                        屋内施設で過ごせる提案をします
+                      </Typography>
+                    </>
+                  }
+                />
+              </CardContent>
+            </Card>
+          </Stack>
+        </RadioGroup>
 
         <Button onClick={goToMain}>🏠</Button>
-      </Box>
-    </>
+      </Stack>
+    </Container>
   );
 }
 

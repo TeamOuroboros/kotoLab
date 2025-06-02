@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Box } from "@yamada-ui/react";
-import { Text } from "@yamada-ui/react";
-import {
-  Button,
-  SimpleGrid,
-  GridItem,
-  For,
-  Radio,
-  RadioGroup,
-  Switch,
-} from "@yamada-ui/react";
 import { useNavigate } from "react-router";
+
+import {
+  Container,
+  Box,
+  Typography,
+  Button,
+  Stack,
+  IconButton,
+  Card,
+  CardContent,
+} from "@mui/material";
+import { ArrowBack, ArrowForward, Home } from "@mui/icons-material";
 
 function ConfirmChild() {
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
@@ -24,7 +25,6 @@ function ConfirmChild() {
   useEffect(() => {
     async function getAllChildData() {
       const response = await axios.get("/api/children");
-
       setgetdata(response.data);
     }
 
@@ -32,23 +32,47 @@ function ConfirmChild() {
   }, []);
 
   return (
-    <>
-      <Box p="md" rounded="md" bg="primary">
-        <Text>子どもの確認</Text>
+    <Container
+      maxWidth="xs"
+      sx={{
+        display: "flex",
+        flexDirection: "column", // 縦並び
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+        px: 2,
+      }}
+    >
+      <Stack spacing={3} width={"100%"}>
+        <Typography variant="h5" textAlign={"center"}>
+          子どもの確認
+        </Typography>
+      </Stack>
+
+      <Stack spacing={2} width={"100%"}>
         {getdata.map((info) => (
-          <Box p="md" rounded="md" bg="primary" key={info.id}>
-            <Text>
-              {info.name}
-              <br />
-              {info.birthday.slice(0, 10)}
-              <br />
-            </Text>
-          </Box>
+          <Card
+            key={info.id}
+            variant="outlined"
+            sx={{ bgcolor: "#f6f6f6", borderRadius: 2 }}
+          >
+            <CardContent>
+              <Typography>👶{info.name}</Typography>
+              <Typography>🗓️{info.birthday.slice(0, 10)}</Typography>
+            </CardContent>
+          </Card>
         ))}
 
-        <Button onClick={goToMain}>🏠</Button>
-      </Box>
-    </>
+        <Stack direction={"row"} spacing={2}>
+          <IconButton onClick={() => navigate(-1)}>
+            <ArrowBack />
+          </IconButton>
+          <IconButton onClick={() => navigate("/main")}>
+            <Home />
+          </IconButton>
+        </Stack>
+      </Stack>
+    </Container>
   );
 }
 
