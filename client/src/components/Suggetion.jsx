@@ -13,18 +13,20 @@ import {
   CardContent,
   FormControlLabel,
 } from "@mui/material";
-import { ArrowBack, ArrowForward, Home } from "@mui/icons-material";
 let sendAiMode = "おまかせ";
 
 function Suggetion() {
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
+  const [value, setValue] = useState("");
 
   function goToMain() {
     navigate("/main");
   }
 
   function getAIMode(e) {
+    setValue(e.target.value);
     sendAiMode = e.target.value;
+    // console.log("🚀 ~ getAIMode ~ sendAiMode:", sendAiMode);
   }
 
   return (
@@ -38,7 +40,7 @@ function Suggetion() {
           AIである以上ばらつきがある可能性があります
         </Typography>
 
-        <RadioGroup>
+        <RadioGroup value={value} onChange={getAIMode}>
           <Stack spacing={2}>
             <Card variant="outlined">
               <CardContent>
