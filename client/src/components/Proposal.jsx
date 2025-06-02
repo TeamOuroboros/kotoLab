@@ -5,13 +5,15 @@ import axios from "axios";
 
 function Proposal() {
   const location = useLocation();
+  console.log("💀 ~ Proposal ~ location:", location);
+
   const contactResult = location.state.resText || "データ取得に失敗しました";
   const [text, setText] = useState([]);
   const [markdown, setMarkdown] = useState(contactResult);
 
   // テキストの要約を表示する関数
   const summary = (markdownText) => {
-    const regex = /##\s*要約\s*[\r\n]+(.+)/g;
+    const regex = /##\s*要約\s*[\r\n]+(.+)/gm;
     const result = [];
     let match;
     while ((match = regex.exec(markdownText))) {
@@ -23,10 +25,17 @@ function Proposal() {
   // テキストの詳細を表示する関数
   const detail = () => {
     const regex = /##\s*詳細\s*[\r\n]+([\s\S]*?)(?=(?:^#\s*提案|\s*$))/gm;
+
+    console.log("💀 ~ detail ~ regex:", regex);
+
     const result = [];
     let match;
 
+    console.log("💀 ~ detail ~ markdown:", markdown);
+
     while ((match = regex.exec(markdown))) {
+      console.log("💀 ~ detail ~ match:", match);
+
       result.push(match[1].trim());
     }
     setText(result);
