@@ -3,8 +3,10 @@ import { Box, Text, Button, Icon } from "@yamada-ui/react";
 import { MdWbSunny, MdNightsStay, MdSettings } from "react-icons/md";
 import { useNavigate } from "react-router";
 import axios from "axios";
+import { sendAiMode } from "./components/Suggetion";
 
 function App() {
+  console.log("💀 ~ sendAiMode:", sendAiMode);
   const [weather, setWeather] = useState("Clear");
   const [maxTemperature, setMaxTemperature] = useState("");
   const [minTemperature, setMinTemperature] = useState("");
@@ -65,6 +67,9 @@ function App() {
   };
 
   const contactRequest = async () => {
+    console.log("hello2");
+    console.log("💀 ~ sendAiMode:", sendAiMode);
+
     try {
       const res = await axios.post(
         "/api/contact",
@@ -72,6 +77,7 @@ function App() {
           weather,
           maxTemperature,
           minTemperature,
+          sendAiMode,
         },
         {
           headers: {

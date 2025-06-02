@@ -2,7 +2,7 @@ const Session = require("../models/Sessions");
 
 const authenticate = async (req, res, next) => {
   const token = req.cookies.session_token;
-  // console.log("🚀 ~ authenticate ~ oken:", token);
+  console.log("🚀 ~ authenticate ~ oken:", token);
   if (!token) {
     return res.status(401).json({ message: "ログインしていません" });
   }
