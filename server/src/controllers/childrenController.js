@@ -6,8 +6,11 @@ const validation = (...args) => {
 
 const addChild = async (req, res) => {
   try {
-    const user_id = req.user.id;
+    // const { name, birthday, gender } = req.body;
+    //req.bodyにuseridないため変更　下2行 検討よろしくお願いします
     const { name, birthday, gender } = req.body;
+    const user_id = req.user.id;
+    console.log("🚀 ~ addChild ~ user_id:", user_id);
     if (!validation(name, birthday, gender, user_id)) {
       return res.status(400).json({ message: "フィールドが欠損しています" });
     }
