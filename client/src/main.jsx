@@ -1,6 +1,5 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { BrowserRouter, Route, Navigate, Routes } from "react-router";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./theme";
 import AppLayout from "./components/AppLayout.jsx";
