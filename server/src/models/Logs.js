@@ -17,4 +17,12 @@ module.exports = {
   async insChildLog(insertData) {
     return await db(LOG_CHILD_TABLE).insert(insertData);
   },
+
+  async feel(insertData, array) {
+    return await db(LOG_TABLE)
+      .select("id", "parent_feeling", "log_date")
+      .where({ user_id: insertData })
+      .whereIn("log_date", array)
+      .orderBy("created_at", "desc");
+  },
 };
