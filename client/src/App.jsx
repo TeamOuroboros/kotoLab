@@ -152,6 +152,7 @@ function App() {
       </Box>
 
       {/* 設定ボタン */}
+
       <Box alignSelf="flex-end" align="right">
         <Button
           bg="#bcd4c1"
