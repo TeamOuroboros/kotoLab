@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { Box, Text, Button, Icon } from "@yamada-ui/react";
-import { MdWbSunny, MdNightsStay, MdSettings } from "react-icons/md";
+import { MdSettings } from "react-icons/md";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { sendAiMode } from "./components/Suggetion";
 
+import { Box, Typography, Button, Stack, IconButton } from "@mui/material";
+
 function App() {
-  console.log("💀 ~ sendAiMode:", sendAiMode);
   const [weather, setWeather] = useState("Clear");
   const [maxTemperature, setMaxTemperature] = useState("");
   const [minTemperature, setMinTemperature] = useState("");
@@ -16,10 +16,6 @@ function App() {
   const [formatted, setformatted] = useState("");
   const navigate = useNavigate();
 
-  // function goToProposal() {
-  //   navigate("/main/proposal");
-  // }
-
   function goToFeeling() {
     navigate("/main/feeling");
   }
@@ -28,12 +24,13 @@ function App() {
   }
   //天気情報を取得する関数
   const handleSubmit = async () => {
-    const { latitude, longitude } = await new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => resolve(position.coords),
-        (error) => reject(error)
-      );
-    });
+    const res = await axios.get("api/auth/me");
+    const user_id = res.data.user.id;
+    const res2 = await axios.get(`api/user/${user_id}`);
+    const userInfo = res2.data;
+    const latitude = userInfo[0].lat;
+    const longitude = userInfo[0].lon;
+
     const resWeather = await axios.get("/api/weather", {
       params: { latitude, longitude },
     });
@@ -102,16 +99,23 @@ function App() {
     handleSubmit();
   }, []);
   return (
-    <Box>
-      <Box textAlign="center" display="flex">
-        <Text fontWeight="bold" fontSize="20px" verticalAlign="middle">
+    <Box p={2}>
+      {/* 上部　天気情報 */}
+      <Box
+        display={"flex"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+        mb={2}
+      >
+        <Typography variant="h6">
           {formatted} {icon}
-        </Text>
-        <Text ml="auto" verticalAlign="middle" fontSize="15px">
+        </Typography>
+
+        <Typography variant="body1">
           {todayFist.todayFirstIcon}
           {todayFist.todayFirstTemp} / {todayLast.todayLastIcon}
           {todayLast.todayLastTemp}
-        </Text>
+        </Typography>
       </Box>
 
       {/* きょうをつくろう。 のテキスト*/}
@@ -119,50 +123,44 @@ function App() {
         display="flex"
         flexDirection="column"
         alignItems="center"
-        // justifyContent="center"
+        justifyContent="center"
         h="450px"
       >
-        <Text fontSize="40px" my={10} pb={150}>
+        <Typography variant="h4" sx={{ my: 8, pb: 6 }}>
           きょうをつくろう。
-        </Text>
+        </Typography>
 
         {/* 提案ボタン　記録 */}
-        <Box display="flex" flexDirection="column" gap={30} rounded="full">
+        <Stack spacing={5}>
           <Button
-            bg="#bcd4c1"
-            w="180"
-            h="80"
-            _hover={{ bg: "#a7c8b1" }}
-            rounded="full"
             onClick={contactRequest}
+            sx={{
+              width: 180,
+              height: 60,
+              borderRadius: 50,
+            }}
           >
             提案
           </Button>
           <Button
-            bg="#bcd4c1"
-            w="180"
-            h="80"
-            _hover={{ bg: "#a7c8b1" }}
-            rounded="full"
             onClick={goToFeeling}
+            sx={{
+              width: 180,
+              height: 60,
+              borderRadius: 50,
+            }}
           >
             記録
           </Button>
-        </Box>
+        </Stack>
       </Box>
 
       {/* 設定ボタン */}
 
-      <Box alignSelf="flex-end" align="right">
-        <Button
-          bg="#bcd4c1"
-          p={15}
-          _hover={{ bg: "#a7c8b1" }}
-          rounded="full"
-          onClick={goToSettings}
-        >
-          <Icon as={MdSettings} />
-        </Button>
+      <Box display={"flex"} justifyContent={"flex-end"} mt={8}>
+        <IconButton onClick={goToSettings}>
+          <MdSettings />
+        </IconButton>
       </Box>
     </Box>
   );
