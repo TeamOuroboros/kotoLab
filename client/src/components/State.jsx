@@ -94,9 +94,23 @@ function State() {
             </Box>
           ))
         )}
-        <IconButton onClick={stateSubmit}>
-          <ArrowForward />
-        </IconButton>
+        {children.length > 0 && (
+          <IconButton
+            onClick={stateSubmit}
+            sx={{
+              bgcolor: "#B1CDC4",
+              color: "#544739",
+              width: 50,
+              height: 50,
+              borderRadius: "50%",
+              "&:hover": {
+                bgcolor: "#A0BEB5",
+              },
+            }}
+          >
+            <ArrowForward />
+          </IconButton>
+        )}
       </Stack>
 
       {/* 左下 */}
