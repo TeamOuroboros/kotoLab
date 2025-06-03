@@ -10,11 +10,33 @@ const childrenRouter = require("./server/src/routes/childrenRoutes");
 const logRouter = require("./server/src/routes/logRoutes");
 const contactRouter = require("./server/src/routes/contactRoutes");
 const weatherRouter = require("./server/src/routes/wetherRoutes");
+const userRouter = require("./server/src/routes/userRoutes");
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, "/public")));
 app.use(cookieParser());
 app.use(cors());
+// dist 配信-----
+app.use(express.static(path.join(__dirname, "/public")));
+app.get("/login", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.get("/register", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.get("/main", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.get("/setting", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.get("/suggetion", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+app.get("/confirmchild", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+// -------------
 
 app.use("/api/auth", authRouter);
 app.use("/api/children", childrenRouter);
@@ -23,6 +45,7 @@ app.use("/api/log", logRouter);
 app.use("/api/children", childrenRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/weather", weatherRouter);
+app.use("/api/user", userRouter);
 
 // app.listen(PORT, () => {
 // 	console.log(`Server running on port ${PORT}`);

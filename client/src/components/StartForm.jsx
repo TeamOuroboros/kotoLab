@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { Box, Button } from "@mui/material";
+import logo from "../assets/logo.png";
 
 function StartForm() {
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
@@ -26,8 +27,8 @@ function StartForm() {
     >
       <Box
         component={"img"}
-        src="https://dragon-ball-official.com/assets/img/intro/intro_1.png"
-        alt="ドラゴンボール"
+        src={logo}
+        alt="ウパ"
         style={{
           width: "100%", // size調整
           // maxWidth: "300px",
