@@ -1,8 +1,6 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 require("dotenv").config();
-const crypto = require("crypto");
-const Session = require("../models/Sessions");
 const User = require("../models/Users");
 
 passport.use(
@@ -25,22 +23,15 @@ passport.use(
         if (!exitUser) {
           const newUser = await User.createUser(
             email, //mail
-            "", //passwordhash
+            "none", //passwordhash
             username, //name
-            "", //address
-            "", //lat
-            "" //lon
+            "名古屋市", //address
+            "35.1851045", //lat
+            "136.899843" //lon
           );
-          exitUser = newUser;
-          //セッショントークンをsessionsに入れる
-          const token = crypto.randomBytes(16).toString("hex");
-          const expires_at = new Date(Date.now() + 1000 * 60 * 60); // 1000ms×60秒×60分で１時間の期限設定
-          await Session.insSession({ token, user_id: exitUser.id, expires_at });
+          exitUser = newUser[0];
         }
 
-        //作成したセッションIDをrequestオブジェクトに渡す
-        request.session_token = token;
-        //passport.jsの認証フロー用のコールバック関数。done(error, user, [info]) errorやuserなければnull
         return done(null, exitUser); //req.user=userを設定してくれる。
       } catch (err) {
         console.error("Google認証エラー：", err);

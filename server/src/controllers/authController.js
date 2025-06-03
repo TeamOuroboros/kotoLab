@@ -4,8 +4,6 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const User = require("../models/Users");
 const Session = require("../models/Sessions");
-require("./passport"); //passport.jsの設定の読み込み
-const passport = require("passport");
 
 const validation = (...args) => {
   return args.every((element) => element);
@@ -114,31 +112,4 @@ const register = async (req, res) => {
   }
 };
 
-const google = async (req, res) => {
-  passport.authenticate("google", {
-    //googleは使用するStrategy名。passport.jsで定義。googleはディフォルト
-    scope: ["email", "profile"], //Googleに要求するユーザの情報範囲指定
-  });
-};
-
-const frontUrl = process.env.FRONT_URL || "/";
-//②認証成功後、指定したcallbackurlでリクエストが戻ってくる
-const googleCallback = async (req, res) => {
-  passport.authenticate("google", {
-    //この部分でStrategyで定義したverify関数が実行（passport.js)。verify関数：要求したprofileとかの処理
-    failureRedirect: frontUrl, //認証失敗後、ここにリダイレクト
-  }),
-    (req, res) => {
-      //verify関数がOKならこのリクエストが実行される。
-      res.cookie("session_token", token, {
-        httpOnly: true,
-        secure: isProduction,
-        sameSite: "Lax",
-        expires: expires_at,
-      });
-      res.redirect(`${frontUrl}main`);
-      // res.redirect("http://localhost:5173/records");
-    };
-};
-
-module.exports = { login, logout, register, authMe, google, googleCallback };
+module.exports = { login, logout, register, authMe };

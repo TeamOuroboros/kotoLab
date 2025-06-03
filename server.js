@@ -1,7 +1,6 @@
 const path = require("path");
 const express = require("express");
 const cors = require("cors");
-const passport = require("passport");
 
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -16,19 +15,6 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "/public")));
 app.use(cookieParser());
 app.use(cors());
-
-const session = require("express-session");
-app.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false, httpOnly: true },
-  })
-);
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 app.use("/api/auth", authRouter);
 app.use("/api/children", childrenRouter);
