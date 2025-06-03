@@ -1,4 +1,9 @@
 const express = require("express");
+const passport = require("passport");
+require("./../controllers/passport"); //passport.jsの設定の読み込み
+const crypto = require("crypto");
+const Session = require("../models/Sessions");
+
 const router = express.Router();
 const {
   login,
@@ -11,6 +16,49 @@ const { authenticate } = require("./authMiddleware");
 router.post("/login", login);
 router.post("/logout", logout);
 router.post("/register", register);
+
+const session = require("express-session");
+router.use(
+  session({
+    secret: "keyboard cat",
+    resave: false,
+    saveUninitialized: false,
+    cookie: { secure: false, httpOnly: true },
+  })
+);
+
+router.use(passport.initialize());
+router.use(passport.session());
+
+router.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["email", "profile"],
+  })
+);
+
+const frontUrl = process.env.FRONT_URL || "/";
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: frontUrl, //認証失敗後、ここにリダイレクト
+  }),
+  async (req, res) => {
+    // console.log("🚀 ~ req:", req.user);
+    //セッショントークンをsessionsに入れる
+    const token = crypto.randomBytes(16).toString("hex");
+    const expires_at = new Date(Date.now() + 1000 * 60 * 60); // 1000ms×60秒×60分で１時間の期限設定
+    await Session.insSession({ token, user_id: req.user.id, expires_at });
+    res.cookie("session_token", token, {
+      httpOnly: true,
+      // secure: isProduction,
+      sameSite: "Lax",
+      expires: expires_at,
+    });
+    res.redirect(`${frontUrl}main`);
+  }
+);
+
 router.get("/me", authenticate, authMe);
 
 module.exports = router;
