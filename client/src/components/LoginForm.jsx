@@ -53,13 +53,15 @@ function LoginForm() {
 
   return (
     <Container
-      maxWidth="xs"
+      maxWidth={false}
+      disableGutters
       sx={{
+        flex: 1,
         display: "flex",
         flexDirection: "column", // 縦並び
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: "100%",
         px: 2,
       }}
     >
@@ -69,6 +71,7 @@ function LoginForm() {
           e.preventDefault();
           processingLogin();
         }}
+        sx={{ width: "100%", maxWidth: 360 }}
       >
         <Typography variant="h4" align="center" gutterBottom>
           ログイン
@@ -78,7 +81,9 @@ function LoginForm() {
           {/* メールアドレス */}
           {/* ラベル + 入力欄をグループ化するためのコンテナ */}
           <FormControl fullWidth variant="outlined">
-            <InputLabel htmlFor="email">メールアドレス</InputLabel>
+            <InputLabel htmlFor="email" sx={{ color: "text.secondary" }}>
+              ✉️メールアドレスを入力
+            </InputLabel>
             <OutlinedInput
               id="email"
               type="email"
@@ -90,7 +95,9 @@ function LoginForm() {
 
           {/* パスワード */}
           <FormControl fullWidth variant="outlined">
-            <InputLabel htmlFor="password">パスワード</InputLabel>
+            <InputLabel htmlFor="password" sx={{ color: "text.secondary" }}>
+              パスワードを入力
+            </InputLabel>
             <OutlinedInput
               id="password"
               type={showPassword ? "text" : "password"}
@@ -111,7 +118,9 @@ function LoginForm() {
             />
           </FormControl>
 
-          <Button type="submit">ログイン</Button>
+          <Box mt={8}>
+            <Button type="submit">ログイン</Button>
+          </Box>
         </Stack>
       </Box>
       <Button onClick={googleLogin}>Googleでログイン</Button>

@@ -6,21 +6,16 @@ import {
   Container,
   Box,
   Typography,
-  Button,
   Stack,
   IconButton,
   Card,
   CardContent,
 } from "@mui/material";
-import { ArrowBack, ArrowForward, Home } from "@mui/icons-material";
+import { ArrowBack, Home } from "@mui/icons-material";
 
 function ConfirmChild() {
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
   const [getdata, setgetdata] = useState([]);
-
-  function goToMain() {
-    navigate("/main");
-  }
 
   useEffect(() => {
     async function getAllChildData() {
@@ -36,41 +31,81 @@ function ConfirmChild() {
       maxWidth="xs"
       sx={{
         display: "flex",
+        bgcolor: "background.default",
         flexDirection: "column", // 縦並び
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
-        px: 2,
+        minHeight: "100vh",
+        px: 4,
       }}
     >
-      <Stack spacing={3} width={"100%"}>
-        <Typography variant="h5" textAlign={"center"}>
-          子どもの確認
-        </Typography>
-      </Stack>
+      <Typography variant="h4" fontWeight={"bold"} textAlign={"center"} mb={8}>
+        子どもの確認
+      </Typography>
 
       <Stack spacing={2} width={"100%"}>
         {getdata.map((info) => (
           <Card
             key={info.id}
             variant="outlined"
-            sx={{ bgcolor: "#f6f6f6", borderRadius: 2 }}
+            sx={{ bgcolor: "#EDEDED", borderRadius: 3, boxShadow: "none" }}
           >
-            <CardContent>
-              <Typography>👶{info.name}</Typography>
-              <Typography>🗓️{info.birthday.slice(0, 10)}</Typography>
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <Box sx={{ width: "100%", maxWidth: 240 }}>
+                <Typography fontSize={"1.1rem"}>👶{info.name}</Typography>
+                <Typography fontSize={"1.1rem"}>
+                  🗓️{info.birthday.slice(0, 10)}
+                </Typography>
+              </Box>
             </CardContent>
           </Card>
         ))}
 
-        <Stack direction={"row"} spacing={2}>
-          <IconButton onClick={() => navigate(-1)}>
-            <ArrowBack />
-          </IconButton>
-          <IconButton onClick={() => navigate("/main")}>
-            <Home />
-          </IconButton>
-        </Stack>
+        {/* 左下 */}
+        <IconButton
+          onClick={() => navigate(-1)}
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            left: 16,
+            bgcolor: "#B1CDC4",
+            color: "#544739",
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            "&:hover": {
+              bgcolor: "#A0BEB5",
+            },
+          }}
+        >
+          <ArrowBack />
+        </IconButton>
+
+        {/* 右下 */}
+        <IconButton
+          onClick={() => navigate("/main")}
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            bgcolor: "#B1CDC4",
+            color: "#544739",
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            "&:hover": {
+              bgcolor: "#A0BEB5",
+            },
+          }}
+        >
+          <Home />
+        </IconButton>
       </Stack>
     </Container>
   );

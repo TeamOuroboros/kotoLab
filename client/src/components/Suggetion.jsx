@@ -3,7 +3,6 @@ import { useNavigate } from "react-router";
 
 import {
   Container,
-  Box,
   Typography,
   Button,
   Stack,
@@ -12,7 +11,10 @@ import {
   RadioGroup,
   CardContent,
   FormControlLabel,
+  IconButton,
 } from "@mui/material";
+import { ArrowBack, Home } from "@mui/icons-material";
+
 let sendAiMode = "おまかせ";
 
 function Suggetion() {
@@ -32,7 +34,7 @@ function Suggetion() {
   return (
     <Container maxWidth="xs" sx={{ py: 4 }}>
       <Stack spacing={3} alignItems={"center"}>
-        <Typography variant="h5" fontWeight={"bold"} textAlign={"center"}>
+        <Typography variant="h4" fontWeight={"bold"} textAlign={"center"}>
           提案について
         </Typography>
 
@@ -42,7 +44,10 @@ function Suggetion() {
 
         <RadioGroup value={value} onChange={getAIMode}>
           <Stack spacing={2}>
-            <Card variant="outlined">
+            <Card
+              variant="outlined"
+              sx={{ bgcolor: "background.default", borderRadius: 2 }}
+            >
               <CardContent>
                 <FormControlLabel
                   value="おまかせ"
@@ -59,7 +64,10 @@ function Suggetion() {
               </CardContent>
             </Card>
 
-            <Card variant="outlined">
+            <Card
+              variant="outlined"
+              sx={{ bgcolor: "background.default", borderRadius: 2 }}
+            >
               <CardContent>
                 <FormControlLabel
                   value="アクティブ"
@@ -76,7 +84,10 @@ function Suggetion() {
               </CardContent>
             </Card>
 
-            <Card variant="outlined">
+            <Card
+              variant="outlined"
+              sx={{ bgcolor: "background.default", borderRadius: 2 }}
+            >
               <CardContent>
                 <FormControlLabel
                   value="おうち"
@@ -93,7 +104,10 @@ function Suggetion() {
               </CardContent>
             </Card>
 
-            <Card variant="outlined">
+            <Card
+              variant="outlined"
+              sx={{ bgcolor: "background.default", borderRadius: 2 }}
+            >
               <CardContent>
                 <FormControlLabel
                   value="屋内"
@@ -112,7 +126,45 @@ function Suggetion() {
           </Stack>
         </RadioGroup>
 
-        <Button onClick={goToMain}>🏠</Button>
+        {/* 左下 */}
+        <IconButton
+          onClick={() => navigate(-1)}
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            left: 16,
+            bgcolor: "#B1CDC4",
+            color: "#544739",
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            "&:hover": {
+              bgcolor: "#A0BEB5",
+            },
+          }}
+        >
+          <ArrowBack />
+        </IconButton>
+
+        {/* 右下 */}
+        <IconButton
+          onClick={() => navigate("/main")}
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            bgcolor: "#B1CDC4",
+            color: "#544739",
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            "&:hover": {
+              bgcolor: "#A0BEB5",
+            },
+          }}
+        >
+          <Home />
+        </IconButton>
       </Stack>
     </Container>
   );

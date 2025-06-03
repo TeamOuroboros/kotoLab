@@ -19,19 +19,23 @@ function StartForm() {
         flexDirection: "column", // 縦並び
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: "100%",
         px: 2,
+        textAlign: "center",
       }}
     >
-      <img
+      <Box
+        component={"img"}
         src="https://dragon-ball-official.com/assets/img/intro/intro_1.png"
         alt="ドラゴンボール"
         style={{
-          width: "300px", // size調整
+          width: "100%", // size調整
+          // maxWidth: "300px",
           height: "auto",
-          marginBottom: "32px",
+          mb: 4,
         }}
-      />
+      ></Box>
+
       <Button onClick={handleLogin}>ログイン</Button>
 
       <Button onClick={handleRegister}>アカウント作成</Button>

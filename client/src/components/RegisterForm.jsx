@@ -76,7 +76,7 @@ function RegisterForm() {
         flexDirection: "column", // 縦並び
         justifyContent: "center",
         alignItems: "center",
-        height: "100vh",
+        height: "100%",
         px: 2,
       }}
     >
@@ -87,7 +87,7 @@ function RegisterForm() {
           processingRegister();
         }}
       >
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant="h4" align="center" mb={4}>
           アカウント作成
         </Typography>
 
@@ -98,6 +98,7 @@ function RegisterForm() {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             fullWidth
+            sx={{ color: "text.secondary" }}
           ></TextField>
 
           <TextField
@@ -107,6 +108,7 @@ function RegisterForm() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             fullWidth
+            sx={{ color: "text.secondary" }}
           ></TextField>
 
           <TextField
@@ -116,10 +118,13 @@ function RegisterForm() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             fullWidth
+            sx={{ color: "text.secondary" }}
           ></TextField>
 
           <FormControl fullWidth>
-            <InputLabel id="region-label">居住地</InputLabel>
+            <InputLabel id="region-label" sx={{ color: "text.secondary" }}>
+              居住地
+            </InputLabel>
             <Select
               labelId="region-label"
               value={region}
@@ -129,15 +134,22 @@ function RegisterForm() {
             >
               <ListSubheader>東京都</ListSubheader>
               <MenuItem value="新宿">新宿区</MenuItem>
+              <MenuItem value="港区">港区</MenuItem>
+              <MenuItem value="台東区">台東区区</MenuItem>
               <ListSubheader>愛知県</ListSubheader>
+              <MenuItem value="名古屋市">名古屋市</MenuItem>
               <MenuItem value="豊田市">豊田市</MenuItem>
+              <MenuItem value="安城市">安城市</MenuItem>
               <MenuItem value="岡崎市">岡崎市</MenuItem>
+              <MenuItem value="豊橋市">豊橋市</MenuItem>
+              <MenuItem value="半田市">半田市</MenuItem>
             </Select>
           </FormControl>
-
-          <Button type="submit" variant="contained" fullWidth>
-            アカウント作成
-          </Button>
+          <Box mt={8}>
+            <Button type="submit" variant="contained" fullWidth>
+              アカウント作成
+            </Button>
+          </Box>
         </Stack>
       </Box>
     </Container>
