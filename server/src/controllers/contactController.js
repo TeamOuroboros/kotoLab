@@ -9,13 +9,24 @@ const Log = require("../models/Logs");
 const { format, subDays } = require("date-fns");
 
 let aIMode;
-
+let initPrompt;
 const contactGemini = async (req, res) => {
   console.log("hello1");
   try {
     const userID = req.user.id;
     const today = format(new Date(), "yyyy-MM-dd");
     const { weather, maxTemperture, minTemperture, sendAiMode } = req.body;
+
+    const todayForCalc = new Date();
+    //注：setDataを使うとtodayForCalcも演算されるので注意
+    const yesterday = format(
+      todayForCalc.setDate(todayForCalc.getDate() - 1),
+      "yyyy-MM-dd"
+    );
+    const theDayBeforeYesterday = format(
+      todayForCalc.setDate(todayForCalc.getDate() - 1),
+      "yyyy-MM-dd"
+    );
 
     // #TODO 提案が初回か2回目以降かチェックする（2回目以降であれば履歴取得してそれ用のプロンプト作成）
 
@@ -31,6 +42,11 @@ const contactGemini = async (req, res) => {
     console.log("💀 ~ contactGemini ~ sendAiMode:", sendAiMode);
     console.log("🚀 ~ contactGemini ~ userID:", userID);
     console.log("🚀 ~ contactGemini ~ today:", today);
+    console.log("💀 ~ contactGemini ~ yesterday:", yesterday);
+    console.log(
+      "💀 ~ contactGemini ~ theDayBeforeYesterday:",
+      theDayBeforeYesterday
+    );
     console.log("🚀 ~ contactGemini ~ address:", address);
 
     //提案モードの切替
@@ -74,19 +90,92 @@ const contactGemini = async (req, res) => {
       return res.status(400).json({ message: "子供情報が取得できません" });
     console.log("🚀 ~ contactGemini ~ childrenID:", childrenID);
 
-    // #TODO log.id から、親の気分や子供の状態を取ってくる(仮：Log.feel)
-    //⚡️⚡️多分feel定義していないからのちにやらないといけない
-    const parentFeeling = await Promise.all(
-      Array.from({ length: logIDArr.length }, (_, i) => {
-        const logID = logIDArr[i];
-        // logから情報取得
-        if (!logID) {
-          return "特に何も無し";
-        }
-        return Log.feel(logID) ?? "特に何も無し";
-      })
-    ); // #TODO 子供の数だけ配列をどうするか検討 子供の状態はchildidで繰り返すか動的に処理
-    console.log("🚀 ~ parentFeeling ~ parentFeeling:", parentFeeling);
+    // #親の気分や子供の状態を取ってくる
+    // user_idがあれば親の特定は可能。あとはlogから該当のuse_idのfeelingを時系列順に並べて上から3個とる
+    //⚡️⚡️毎日ログをつけないユーザーは一旦放置
+
+    // const parentFeeling = await Promise.all(
+    //   Array.from({ length: logIDArr.length }, (_, i) => {
+    //     console.log("💀 ~ Array.from ~ logIDArr:", logIDArr);
+    //     // const logID = logIDArr[i];
+    //     const logID = logIDArr[0];
+
+    //     // logから情報取得
+    //     console.log("💀 ~ Array.from ~ logID:", logID);
+    //     if (!logID) {
+    //       return "特に何も無し";
+    //     }
+    //     return Log.feel(userID) ?? "特に何も無し";
+    //   })
+    // );
+    //------------------------------親の感情取得-----------------------------------
+    const selectDate = [];
+    selectDate.push(today);
+    selectDate.push(yesterday);
+    selectDate.push(theDayBeforeYesterday);
+    let theDayBeforeYesterdayFeeeling = "";
+    let yesterdayFeeeling = "";
+    let todayFeeeling = "";
+
+    const parentFeeling = await Log.feel(userID, selectDate);
+    const logID = parentFeeling[0].id;
+    console.log("logID", logID);
+    console.log("💀 ~ contactGemini ~ parentFeeling:", parentFeeling);
+
+    console.log("💀 ~ contactGemini ~ selectDate:", selectDate);
+
+    //2日前の感情取得(複数ある場合は一番最新のものを取得)
+    for (const obj of parentFeeling) {
+      flag = false;
+      if (
+        format(obj.log_date, "yyyy-MM-dd") === theDayBeforeYesterday &&
+        flag === false
+      ) {
+        theDayBeforeYesterdayFeeeling = obj.parent_feeling;
+        flag = true;
+      } else {
+        theDayBeforeYesterdayFeeeling = "特に何も無し";
+      }
+    }
+
+    //1日前の感情取得(複数ある場合は一番最新のものを取得)
+    for (const obj of parentFeeling) {
+      flag = false;
+      if (format(obj.log_date, "yyyy-MM-dd") === yesterday && flag === false) {
+        yesterdayFeeeling = obj.parent_feeling;
+        flag = true;
+      } else {
+        yesterdayFeeeling = "特に何も無し";
+      }
+    }
+
+    //今日の感情取得(複数ある場合は一番最新のものを取得)
+    for (const obj of parentFeeling) {
+      flag = false;
+      if (format(obj.log_date, "yyyy-MM-dd") === today && flag === false) {
+        todayFeeeling = obj.parent_feeling;
+        flag = true;
+      } else {
+        todayFeeeling = "特に何も無し";
+      }
+    }
+
+    theDayBeforeYesterdayFeeeling = theDayBeforeYesterdayFeeeling.replace(
+      "{",
+      ""
+    );
+    theDayBeforeYesterdayFeeeling = theDayBeforeYesterdayFeeeling.replace(
+      "}",
+      ""
+    );
+    yesterdayFeeeling = yesterdayFeeeling.replace("{", "");
+    yesterdayFeeeling = yesterdayFeeeling.replace("}", "");
+    todayFeeeling = todayFeeeling.replace("{", "");
+    todayFeeeling = todayFeeeling.replace("}", "");
+
+    //--------------------------------------------------------------------------
+
+    // #TODO 子供の数だけ配列をどうするか検討 子供の状態はchildidで繰り返すか動的に処理
     //   ```多分こうなる
     // childState === [
     //   [state1a, state1b, state1c], // 子供1人目の3日分のstate
@@ -109,31 +198,33 @@ const contactGemini = async (req, res) => {
     //   })
     // );
     //⚡️⚡️多分Logchild.state定義していないからのちにやらないといけない
-    const childState = childrenID.map((childID) => {
-      return Array.from({ length: logIDArr.length }, (_, i) => {
-        const logID = logIDArr[i];
-        // logから情報取得
-        if (!logID) {
-          return "特に何も無し";
-        }
-        return Logchild.state(logID, childID) ?? "特に何も無し";
-      });
-    });
-    console.log("🚀 ~ childState ~ childState:", childState);
+    // const childState = childrenID.map((childID) => {
+    //   return Array.from({ length: logIDArr.length }, (_, i) => {
+    //     const logID = logIDArr[i];
+    //     // logから情報取得
+    //     if (!logID) {
+    //       return "特に何も無し";
+    //     }
+    //     return Logchild.state(logID, childID) ?? "特に何も無し";
+    //   });
+    // });
+    // console.log("🚀 ~ childState ~ childState:", childState);
 
     // ⚡️⚡️initPromptは現在固定で問い合わせています。
     console.log("💀 ~ contactGemini ~ aIMode:", aIMode);
 
-    const initPrompt = `あなたは、親子の行動提案アシスタントです。
-    \n以下の条件をもとに、今日親子でどう過ごすのが最適かを提案してください。
-    また、外出する場合は、3つ程度のジャンルを絞り、それぞれの提案の理由が書かれた詳細もつけてください。
-    \nまた、それぞれの提案に対して20文字程度で詳細理由を要約した文章をつけてください。
-    \nまた、外出先は具体的な施設名があると良いですが、近隣の公園などはあえて名前を出さないのも提案する側の配慮です。
-    \n出力はマークダウン形式でお願いします。フォーマットは以下の通りです。
-    \n\n # 提案1 \n ##要約 \n ## 詳細 # 提案2 \n ##要約 \n ## 詳細 # 提案3\n ##要約 \n ## 詳細 \n
-    \n【条件】
-    \n-居住地：${address}\n-日付：${today}\n- 今日の天気：${weather}\n- 最高気温：${maxTemperture}\n- 最低気温：${minTemperture}\n- 子供の年齢：1歳,2歳\n- 親の状態（直近3日）：\n  - 3日前：疲れている\n. - 2日前：ちょっと疲れている\n  - 1日前：元気\n- 子供の様子（直近3日）：\n  - 3日前：体調が悪そう\n. - 2日前：ちょっと回復してきたね\n  - 1日前：フル調子じゃないけど元気！
-    \n  - 提案モード：${aIMode}\n  - 詳細の条件：改行はしないでください。午前と午後のおすすめを回答してください`;
+    initPrompt = `あなたは、親子の行動提案アシスタントです。
+  \n以下の条件をもとに、今日親子でどう過ごすのが最適かを提案してください。
+  また、外出する場合は、3つ程度のジャンルを絞り、それぞれの提案の理由が書かれた詳細もつけてください。
+  \nまた、それぞれの提案に対して20文字程度で詳細理由を要約した文章をつけてください。
+  \nまた、外出先は具体的な施設名があると良いですが、近隣の公園などはあえて名前を出さないのも提案する側の配慮です。
+  \n出力はマークダウン形式でお願いします。フォーマットは以下の通りです。
+  \n\n # 提案1 \n ##要約 \n ## 詳細 # 提案2 \n ##要約 \n ## 詳細 # 提案3\n ##要約 \n ## 詳細 \n
+  \n【条件】
+  \n-居住地：${address}\n-日付：${today}\n- 今日の天気：${weather}\n- 最高気温：${maxTemperture}\n- 最低気温：${minTemperture}\n- 
+  子供の年齢：1歳,2歳\n- 親の状態（直近3日）：\n  - 2日前：${theDayBeforeYesterdayFeeeling}\n. - 1日前：${yesterdayFeeeling}\n  - 今日：${todayFeeeling}\n- 子供の様子（直近3日）：\n  - 3日前：体調が悪そう\n. - 2日前：ちょっと回復してきたね\n  - 1日前：フル調子じゃないけど元気！
+  \n  - 提案モード：${aIMode}\n  - 詳細の条件：改行はしないでください。午前と午後のおすすめを回答してください`;
+
     const api = process.env.GEMINI_API || null;
 
     if (!api) {
@@ -169,7 +260,31 @@ const contactGemini = async (req, res) => {
     );
 
     const contactResult = response.data.candidates[0].content.parts[0].text;
-    // console.log("🥇🥇🥇 ~ contactGemini ~ contactResult:", contactResult);
+    console.log("🥇🥇🥇 ~ contactGemini ~ contactResult:", contactResult);
+
+    //---------AIへの質問と反応をDBに登録する----------------------
+
+    const userInput = [
+      {
+        log_id: logID,
+        log: initPrompt,
+        created_at: new Date(),
+        role: "user",
+      },
+    ];
+    const aiResponse = [
+      {
+        log_id: logID,
+        log: contactResult,
+        created_at: new Date(),
+        role: "AI",
+      },
+    ];
+
+    await SuggestLog.savelog(userInput);
+    await SuggestLog.savelog(aiResponse);
+
+    //---------------------------------------------------------
 
     return res
       .status(200)
