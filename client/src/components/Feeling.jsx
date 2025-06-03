@@ -8,6 +8,7 @@ import {
   Button,
   Stack,
   IconButton,
+  Grid,
 } from "@mui/material";
 
 import { ArrowBack, ArrowForward, Home } from "@mui/icons-material";
@@ -75,46 +76,91 @@ function Feeling() {
       maxWidth="xs"
       sx={{
         display: "flex",
+        flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         height: "100vh",
+        py: 4,
       }}
     >
-      <Stack spacing={3}>
-        <Box sx={{ gap: 2 }}>
-          <Typography variant="h4" align="center" gutterBottom>
-            どんな気持ち？
-          </Typography>
-          {feelings.map((feeling) => (
+      <Typography variant="h4" align="center" gutterBottom>
+        どんな気持ち？
+      </Typography>
+      <Grid container spacing={1} justifyContent={"center"}>
+        {feelings.map((feeling) => (
+          <Grid item key={feeling} display={"flex"} justifyContent={"center"}>
             <Button
-              key={feeling}
               variant={selected.includes(feeling) ? "contained" : "outlined"}
               onClick={() => setFeeling(feeling)}
               sx={{
                 borderRadius: "50%",
-                width: 80,
-                height: 80,
+                width: 70,
+                height: 70,
                 fontSize: "0.7rem",
-                padding: "1rem",
+                padding: "0.5rem",
               }}
             >
               {feeling}
             </Button>
-          ))}
+          </Grid>
+        ))}
+      </Grid>
+      <Box mt={3}>
+        <IconButton
+          onClick={submitFeeling}
+          sx={{
+            bgcolor: "#B1CDC4",
+            color: "#544739",
+            width: 50,
+            height: 50,
+            borderRadius: "50%",
+            "&:hover": {
+              bgcolor: "#A0BEB5",
+            },
+          }}
+        >
+          <ArrowForward />
+        </IconButton>
+      </Box>
+      {/* 左下 */}
+      <IconButton
+        onClick={() => navigate(-1)}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          left: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "70%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <ArrowBack />
+      </IconButton>
 
-          <IconButton onClick={submitFeeling}>
-            <ArrowForward />
-          </IconButton>
-        </Box>
-      </Stack>
-      <Stack direction={"row"}>
-        <IconButton onClick={() => navigate(-1)}>
-          <ArrowBack />
-        </IconButton>
-        <IconButton onClick={() => navigate("/main")}>
-          <Home />
-        </IconButton>
-      </Stack>
+      {/* 右下 */}
+      <IconButton
+        onClick={() => navigate("/main")}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <Home />
+      </IconButton>
     </Container>
   );
 }

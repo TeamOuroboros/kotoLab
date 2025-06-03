@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router";
+import axios from "axios";
 
 import {
   Container,
@@ -7,67 +8,68 @@ import {
   Button,
   Stack,
   IconButton,
-  InputAdornment,
-  OutlinedInput,
-  InputLabel,
-  FormControl,
+  Paper,
   Divider,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 
 function settingMain() {
-  const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
-
+  const navigate = useNavigate();
+  const Item = ({ label, to }) => (
+    <Box
+      display={"flex"}
+      justifyContent={"space-between"}
+      alignItems={"center"}
+      px={1}
+      py={1.5}
+    >
+      <Typography>{label}</Typography>
+      <Typography
+        sx={{ fontWeight: "bold", fontSize: "1.2rem" }}
+        onClick={() => to && navigate(to)}
+      >
+        ＞
+      </Typography>
+    </Box>
+  );
+  const processingLogout = async () => {
+    await axios.post("api/auth/logout");
+    alert("ログアウトしました");
+    navigate("/");
+  };
   return (
-    <Container maxWidth="xs" sx={{ py: 4 }}>
-      <Box>
-        <Stack spacing={2}>
+    <Container maxWidth="xs" sx={{ py: 4, bgcolor: "background.default" }}>
+      <Paper
+        elevation={1}
+        sx={{ borderRadius: 3, p: 2, bgcolor: "background.default" }}
+      >
+        <Stack spacing={1}>
+          {/* ヘッダー */}
           <Box
             display={"flex"}
             justifyContent={"space-between"}
             alignItems={"center"}
           >
-            <Typography>設定</Typography>
-            <Button onClick={() => navigate("/main")}>戻る</Button>
+            <IconButton onClick={() => navigate("/main")}>
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6">設定</Typography>
+            <Box width={48}></Box>
           </Box>
 
           <Divider />
 
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Typography>子供の追加</Typography>
-            <Button onClick={() => navigate("/register/children")}>＞</Button>
-          </Box>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Typography>子供の確認</Typography>
-            <Button onClick={() => navigate("/confirmchild")}>＞</Button>
-          </Box>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Typography> 提案のカスタマイズ</Typography>
-            <Button onClick={() => navigate("/suggetion")}>＞</Button>
-          </Box>
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            alignItems={"center"}
-          >
-            <Typography> データリセット</Typography>
-            <Button>＞</Button>
-          </Box>
+          {/* メニュー項目 */}
+          <Item label={"子供の追加"} to={"/register/children"} />
+          <Item label={"子供の確認"} to={"/confirmchild"} />
+          <Item label={"提案のカスタマイズ"} to={"/suggetion"} />
+          <Item label={"データリセット"} to={"/resetdata"} />
 
-          <Button>ログアウト</Button>
+          <Button sx={{ mt: 5 }} onClick={processingLogout}>
+            ログアウト
+          </Button>
         </Stack>
-      </Box>
+      </Paper>
     </Container>
   );
 }

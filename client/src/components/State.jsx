@@ -52,16 +52,26 @@ function State() {
   }, []);
 
   return (
-    <Container>
+    <Container
+      sx={{
+        display: "flex",
+        bgcolor: "background.default",
+        flexDirection: "column", // 縦並び
+        justifyContent: "center",
+        // alignItems: "center",
+        minHeight: "100vh",
+        px: 1,
+      }}
+    >
       <Stack spacing={4} alignItems={"center"}>
         {children.map((child) => (
           <Box key={child.id} width={"100%"}>
-            <Typography>{child.name}ちゃんのようすは？</Typography>
+            <Typography variant="h6">{child.name}ちゃんのようすは？</Typography>
 
             <TextField
               placeholder="様子を入力（省略可）"
               multiline
-              minRows={10}
+              minRows={6}
               fullWidth
               value={textMap[child.id] || ""}
               onChange={(e) => statusWrite(child.id, e.target.value)}
@@ -72,14 +82,45 @@ function State() {
         <IconButton onClick={stateSubmit}>
           <ArrowForward />
         </IconButton>
-        <Stack direction={"row"} spacing={2}>
-          <IconButton onClick={() => navigate(-1)}>
-            <ArrowBack />
-          </IconButton>
-          <IconButton onClick={() => navigate("/main")}>
-            <Home />
-          </IconButton>
-        </Stack>
+        {/* 左下 */}
+        <IconButton
+          onClick={() => navigate(-1)}
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            left: 16,
+            bgcolor: "#B1CDC4",
+            color: "#544739",
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            "&:hover": {
+              bgcolor: "#A0BEB5",
+            },
+          }}
+        >
+          <ArrowBack />
+        </IconButton>
+
+        {/* 右下 */}
+        <IconButton
+          onClick={() => navigate("/main")}
+          sx={{
+            position: "fixed",
+            bottom: 16,
+            right: 16,
+            bgcolor: "#B1CDC4",
+            color: "#544739",
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            "&:hover": {
+              bgcolor: "#A0BEB5",
+            },
+          }}
+        >
+          <Home />
+        </IconButton>
       </Stack>
     </Container>
   );
