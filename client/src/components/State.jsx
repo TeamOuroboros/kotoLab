@@ -64,64 +64,80 @@ function State() {
       }}
     >
       <Stack spacing={4} alignItems={"center"}>
-        {children.map((child) => (
-          <Box key={child.id} width={"100%"}>
-            <Typography variant="h6">{child.name}ちゃんのようすは？</Typography>
+        {children.length === 0 ? (
+          <>
+            <Typography variant="body1" textAlign={"center"} mb={8}>
+              登録された子どもがいません
+            </Typography>
+            <Button
+              sx={{ fontWeight: "bold", mt: 20 }}
+              onClick={() => navigate("/register/children")}
+            >
+              子供を登録する
+            </Button>
+          </>
+        ) : (
+          children.map((child) => (
+            <Box key={child.id} width={"100%"}>
+              <Typography variant="h6">
+                {child.name}ちゃんのようすは？
+              </Typography>
 
-            <TextField
-              placeholder="様子を入力（省略可）"
-              multiline
-              minRows={6}
-              fullWidth
-              value={textMap[child.id] || ""}
-              onChange={(e) => statusWrite(child.id, e.target.value)}
-            />
-          </Box>
-        ))}
-
+              <TextField
+                placeholder="様子を入力（省略可）"
+                multiline
+                minRows={6}
+                fullWidth
+                value={textMap[child.id] || ""}
+                onChange={(e) => statusWrite(child.id, e.target.value)}
+              />
+            </Box>
+          ))
+        )}
         <IconButton onClick={stateSubmit}>
           <ArrowForward />
         </IconButton>
-        {/* 左下 */}
-        <IconButton
-          onClick={() => navigate(-1)}
-          sx={{
-            position: "fixed",
-            bottom: 16,
-            left: 16,
-            bgcolor: "#B1CDC4",
-            color: "#544739",
-            width: 48,
-            height: 48,
-            borderRadius: "50%",
-            "&:hover": {
-              bgcolor: "#A0BEB5",
-            },
-          }}
-        >
-          <ArrowBack />
-        </IconButton>
-
-        {/* 右下 */}
-        <IconButton
-          onClick={() => navigate("/main")}
-          sx={{
-            position: "fixed",
-            bottom: 16,
-            right: 16,
-            bgcolor: "#B1CDC4",
-            color: "#544739",
-            width: 48,
-            height: 48,
-            borderRadius: "50%",
-            "&:hover": {
-              bgcolor: "#A0BEB5",
-            },
-          }}
-        >
-          <Home />
-        </IconButton>
       </Stack>
+
+      {/* 左下 */}
+      <IconButton
+        onClick={() => navigate(-1)}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          left: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <ArrowBack />
+      </IconButton>
+
+      {/* 右下 */}
+      <IconButton
+        onClick={() => navigate("/main")}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <Home />
+      </IconButton>
     </Container>
   );
 }
