@@ -10,6 +10,7 @@ const childrenRouter = require("./server/src/routes/childrenRoutes");
 const logRouter = require("./server/src/routes/logRoutes");
 const contactRouter = require("./server/src/routes/contactRoutes");
 const weatherRouter = require("./server/src/routes/wetherRoutes");
+const userRouter = require("./server/src/routes/userRoutes");
 
 app.use(express.json());
 app.use(cookieParser());
@@ -44,6 +45,7 @@ app.use("/api/log", logRouter);
 app.use("/api/children", childrenRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/weather", weatherRouter);
+app.use("/api/user", userRouter);
 
 // app.listen(PORT, () => {
 // 	console.log(`Server running on port ${PORT}`);
