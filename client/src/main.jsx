@@ -17,6 +17,7 @@ import App from "./App.jsx";
 import Proposal from "./components/Proposal.jsx";
 import State from "./components/State.jsx";
 import ConfirmChild from "./components/ConfirmChild";
+import ConfirmParent from "./components/ConfirmParent";
 
 registerSW();
 
@@ -38,6 +39,7 @@ createRoot(document.getElementById("root")).render(
           <Route path="/setting" element={<SettingMain />} />
           <Route path="/suggetion" element={<Suggetion />} />
           <Route path="/confirmchild" element={<ConfirmChild />} />
+          <Route path="/confirmparent" element={<ConfirmParent />} />
         </Routes>
       </BrowserRouter>
     </AppLayout>

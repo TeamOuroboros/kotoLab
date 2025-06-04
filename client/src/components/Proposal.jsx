@@ -9,7 +9,7 @@ import {
   Paper,
 } from "@mui/material";
 import axios from "axios";
-import { Home } from "@mui/icons-material";
+import { Home, ArrowBack } from "@mui/icons-material";
 
 function Proposal() {
   const location = useLocation();
@@ -160,6 +160,25 @@ function Proposal() {
         </Button>
       </Stack>
 
+      {/* 左下 */}
+      <IconButton
+        onClick={() => navigate(-1)}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          left: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <ArrowBack />
+      </IconButton>
       {/* 右下 */}
       <IconButton
         onClick={() => navigate("/main")}

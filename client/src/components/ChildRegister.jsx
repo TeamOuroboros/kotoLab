@@ -11,7 +11,9 @@ import {
   ToggleButtonGroup,
   ToggleButton,
   Stack,
+  IconButton,
 } from "@mui/material";
+import { Home, ArrowBack } from "@mui/icons-material";
 
 function ChildRegister() {
   const [childName, setChildName] = useState("");
@@ -103,6 +105,44 @@ function ChildRegister() {
           </Box>
         </Stack>
       </Box>
+      {/* 左下 */}
+      <IconButton
+        onClick={() => navigate(-1)}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          left: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <ArrowBack />
+      </IconButton>
+      {/* 右下 */}
+      <IconButton
+        onClick={() => navigate("/main")}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <Home />
+      </IconButton>
     </Container>
   );
 }

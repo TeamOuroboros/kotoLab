@@ -14,22 +14,18 @@ import {
 } from "@mui/material";
 import { ArrowBack, Home } from "@mui/icons-material";
 
-function ConfirmChild() {
+function ConfirmParent() {
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
   const [getdata, setgetdata] = useState([]);
-  const [childState, setChildState] = useState([]);
 
   useEffect(() => {
     async function getAllChildData() {
       const response = await axios.get("/api/children");
-      const ids = response.data.map((child) => child.id).join(",");
-      const resopnse_log = await axios.get(`api/log/childstate?ids=${ids}`);
       setgetdata(response.data);
-      setChildState(resopnse_log.data.data);
     }
+
     getAllChildData();
   }, []);
-  console.log("🚀 ~ getdata.map ~ childState:", childState);
 
   return (
     <Container
@@ -61,38 +57,28 @@ function ConfirmChild() {
             </Button>
           </>
         ) : (
-          getdata.map((info) => {
-            const state = childState.find((log) => log.children_id === info.id);
-
-            return (
-              <Card
-                key={info.id}
-                variant="outlined"
-                sx={{ bgcolor: "#EDEDED", borderRadius: 3, boxShadow: "none" }}
+          getdata.map((info) => (
+            <Card
+              key={info.id}
+              variant="outlined"
+              sx={{ bgcolor: "#EDEDED", borderRadius: 3, boxShadow: "none" }}
+            >
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
-                <CardContent
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                  }}
-                >
-                  <Box sx={{ width: "100%", maxWidth: 240 }}>
-                    <Typography fontSize={"1.1rem"}>👶{info.name}</Typography>
-                    <Typography fontSize={"1.1rem"}>
-                      🗓️{info.birthday.slice(0, 10)}
-                    </Typography>
-                    <Typography fontSize={"1.1rem"}>
-                      😃状態:{" "}
-                      {state?.child_state
-                        ? state.child_state
-                        : "記録がありません"}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-            );
-          })
+                <Box sx={{ width: "100%", maxWidth: 240 }}>
+                  <Typography fontSize={"1.1rem"}>👶{info.name}</Typography>
+                  <Typography fontSize={"1.1rem"}>
+                    🗓️{info.birthday.slice(0, 10)}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          ))
         )}
       </Stack>
 
@@ -140,4 +126,4 @@ function ConfirmChild() {
 }
 
 //以下に公開変数、関数を記載
-export default ConfirmChild;
+export default ConfirmParent;
