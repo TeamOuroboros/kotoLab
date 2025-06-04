@@ -56,7 +56,6 @@ const getChildLog = async (req, res) => {
     const idsParam = req.query.ids;
 
     const ids = idsParam.split(",").map(Number);
-    console.log("🚀 ~ getChildLog ~ ids:", ids);
 
     const child_state = await logModel.getChildLog(ids);
 
@@ -68,4 +67,18 @@ const getChildLog = async (req, res) => {
   }
 };
 
-module.exports = { addParentLog, addChildLog, getChildLog };
+const getParentState = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const parentState = await logModel.parentState(user_id);
+
+    return res.status(200).json({
+      message: "親のステータスの取得に成功しました",
+      data: parentState,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: "Server Error" });
+  }
+};
+
+module.exports = { addParentLog, addChildLog, getChildLog, getParentState };

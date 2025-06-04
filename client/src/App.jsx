@@ -34,7 +34,6 @@ function App() {
     const resWeather = await axios.get("/api/weather", {
       params: { latitude, longitude },
     });
-    // console.log("🙆‍♀️☀️バックエンドからの天気レスポンス:", resWeather.data);
     const {
       weather,
       maxTemperature,
@@ -72,8 +71,6 @@ function App() {
           withCredentials: true,
         }
       );
-      console.log("💀 ~ contactRequest ~ weather:", weather);
-      console.log("💀 ~ contactRequest ~ weather:", weather);
       const resText = res.data.contactResult;
 
       // 成功したら画面遷移　　goToProposalらは一旦コメントアウト

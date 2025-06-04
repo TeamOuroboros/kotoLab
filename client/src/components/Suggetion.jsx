@@ -28,7 +28,6 @@ function Suggetion() {
   function getAIMode(e) {
     setValue(e.target.value);
     sendAiMode = e.target.value;
-    // console.log("🚀 ~ getAIMode ~ sendAiMode:", sendAiMode);
   }
 
   return (

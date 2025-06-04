@@ -12,7 +12,6 @@ let aIMode;
 let initPrompt;
 const contactGemini = async (req, res) => {
   let chidstate = "";
-  console.log("hello1");
   try {
     const userID = req.user.id;
     const today = format(new Date(), "yyyy-MM-dd");
@@ -43,7 +42,6 @@ const contactGemini = async (req, res) => {
     } else {
       aIMode = "なるべく屋内施設で過ごせる提案";
     }
-    console.log("💀 ~ contactGemini ~ aIMode:", aIMode);
 
     //------------------------------親の感情取得-----------------------------------
     const selectDate = [];
@@ -200,9 +198,6 @@ const contactGemini = async (req, res) => {
       getFeelingFlag = false;
       sendChilrenState = sendChilrenState + `\n  - 今日：${chidstate}`;
     }
-    console.log("💀 ~ contactGemini ~ sendChilrenState:", sendChilrenState);
-
-    console.log("💀 ~ contactGemini ~ aIMode:", aIMode);
 
     initPrompt =
       `あなたは、親子の行動提案アシスタントです。
@@ -225,7 +220,6 @@ const contactGemini = async (req, res) => {
     }
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${api}`;
 
-    console.log("🚀サーバー側　 urlまではきている", url);
     //渡し方NGのため変更
     const body = {
       contents: [
@@ -238,8 +232,6 @@ const contactGemini = async (req, res) => {
         },
       ],
     };
-    console.log("🚀 ~ contactGemini ~ body:", body);
-    console.log("🚀 ~ contactGemini ~ body:", body.contents[0].parts);
 
     //ここでgemini-2.0に問い合わせしています
     const response = await axios.post(url, body, {
