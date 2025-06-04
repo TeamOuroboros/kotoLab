@@ -21,16 +21,6 @@ router.post("/login", login);
 router.post("/logout", logout);
 router.post("/register", register);
 
-const session = require("express-session");
-router.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: isProduction, httpOnly: true },
-  })
-);
-
 router.use(passport.initialize());
 router.use(passport.session());
 
