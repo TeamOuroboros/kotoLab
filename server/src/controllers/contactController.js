@@ -216,7 +216,7 @@ const contactGemini = async (req, res) => {
   \n-居住地：${address}\n-日付：${today}\n- 今日の天気：${weather}\n- 最高気温：${maxTemperature}\n- 最低気温：${minTemperature}
   \n- 親の状態（直近3日）：\n  - 2日前：${theDayBeforeYesterdayFeeeling}\n. - 1日前：${yesterdayFeeeling}\n  - 今日：${todayFeeeling}` +
       sendChilrenState +
-      `\n  - 提案モード：${aIMode}\n  - 詳細の条件：改行はしないでください。午前と午後のおすすめを回答してください`;
+      `\n  - 提案モード：${aIMode}\n  - 詳細の条件：改行はしないでください。午前と午後のおすすめを回答してください。回答時の固有名詞は日本語か英語で(極力日本語)回答してください`;
 
     const api = process.env.GEMINI_API || null;
 
