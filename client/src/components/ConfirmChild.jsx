@@ -22,12 +22,12 @@ function ConfirmChild() {
   useEffect(() => {
     async function getAllChildData() {
       const response = await axios.get("/api/children");
-      const child_id = response.data[0].id;
-      const resopnse_log = await axios.get(`api/log/childstate/${child_id}`);
+      const ids = response.data.map((child) => child.id).join(",");
+      console.log("🚀 ~ getAllChildData ~ ds:", ids);
+      const resopnse_log = await axios.get(`api/log/childstate?ids=${ids}`);
       setgetdata(response.data);
-      setChildState(resopnse_log);
+      setChildState(resopnse_log.data);
     }
-
     getAllChildData();
   }, []);
 

@@ -10,6 +10,6 @@ const { authenticate } = require("./authMiddleware");
 router.use(authenticate);
 router.post("/parent", addParentLog);
 router.post("/childstate", addChildLog);
-router.get("/childstate/:id", getChildLog);
+router.get("/childstate", getChildLog);
 
 module.exports = router;

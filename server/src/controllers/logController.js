@@ -53,9 +53,12 @@ const addChildLog = async (req, res) => {
 
 const getChildLog = async (req, res) => {
   try {
-    const child_id = req.params.id;
+    const idsParam = req.query.id;
 
-    const child_state = await logModel.getChildLog(child_id);
+    const ids = idsParam.split(",").map(Number);
+    console.log("🚀 ~ getChildLog ~ ids:", ids);
+
+    const child_state = await logModel.getChildLog(user_id);
 
     return res
       .status(201)
