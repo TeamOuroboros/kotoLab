@@ -69,6 +69,9 @@ app.get("/suggetion", (req, res) => {
 app.get("/confirmchild", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
+app.get("/confirmparent", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
+});
 
 // -------------
 

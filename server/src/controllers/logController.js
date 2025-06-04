@@ -51,4 +51,18 @@ const addChildLog = async (req, res) => {
   }
 };
 
-module.exports = { addParentLog, addChildLog };
+const getChildLog = async (req, res) => {
+  try {
+    const child_id = req.params.id;
+
+    const child_state = await logModel.getChildLog(child_id);
+
+    return res
+      .status(201)
+      .json({ message: "ログの追加に成功しました", data: child_state });
+  } catch (error) {
+    return res.status(500).json({ message: "Server Error" });
+  }
+};
+
+module.exports = { addParentLog, addChildLog, getChildLog };

@@ -14,18 +14,14 @@ import {
 } from "@mui/material";
 import { ArrowBack, Home } from "@mui/icons-material";
 
-function ConfirmChild() {
+function ConfirmParent() {
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
   const [getdata, setgetdata] = useState([]);
-  const [childState, setChildState] = useState([]);
 
   useEffect(() => {
     async function getAllChildData() {
       const response = await axios.get("/api/children");
-      const child_id = response.data[0].id;
-      const resopnse_log = await axios.get(`api/log/childstate/${child_id}`);
       setgetdata(response.data);
-      setChildState(resopnse_log);
     }
 
     getAllChildData();
@@ -130,4 +126,4 @@ function ConfirmChild() {
 }
 
 //以下に公開変数、関数を記載
-export default ConfirmChild;
+export default ConfirmParent;

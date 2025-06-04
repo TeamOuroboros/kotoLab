@@ -62,6 +62,7 @@ function settingMain() {
           {/* メニュー項目 */}
           <Item label={"子供の追加"} to={"/register/children"} />
           <Item label={"子供の確認"} to={"/confirmchild"} />
+          <Item label={"親の確認"} to={"/confirmparent"} />
           <Item label={"提案のカスタマイズ"} to={"/suggetion"} />
           <Item label={"データリセット"} to={"/resetdata"} />
 
