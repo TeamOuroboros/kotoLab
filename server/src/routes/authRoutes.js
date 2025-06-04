@@ -55,7 +55,7 @@ router.get(
       sameSite: "Lax",
       expires: expires_at,
     });
-    res.redirect(`${frontUrl}main`);
+    res.redirect(`${frontUrl}register/children`);
   }
 );
 
