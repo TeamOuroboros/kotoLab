@@ -76,13 +76,5 @@ app.get("/confirmchild", (req, res) => {
 app.get("/confirmparent", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-// -------------
-
-// app.listen(PORT, () => {
-// 	console.log(`Server running on port ${PORT}`);
-// });
-
-// const userController = require('./server/src/controllers/userscontroller');
-// app.get('/api', userController.allGet);
 
 module.exports = app;

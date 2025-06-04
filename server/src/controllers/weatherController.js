@@ -3,10 +3,7 @@ const getWeather = async (req, res) => {
   try {
     const lat = Number(req.query.latitude);
     const lon = Number(req.query.longitude);
-    console.log("🚀 ~ getWeather ~ latitude,longitude:", lat, lon);
-
     const apiKey = process.env.WEATHER_API;
-    console.log("🚀 ~ getWeather ~ apiKey:", apiKey);
     if (!apiKey) {
       return res
         .status(500)
@@ -15,15 +12,13 @@ const getWeather = async (req, res) => {
 
     //今の天気
     const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=ja&appid=${apiKey}`;
-    // console.log("🚀 ~ getWeather ~ url:", url);
 
     const data = await axios.get(url);
-    // console.log("🚀 ~ getWeather ~ data:", data);
 
     //拡張性持たせるために作成しました　1Wの天気予報を取得しています 今は今朝と今晩の気温を算出しています
     const weekUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=ja&appid=${apiKey}`;
     const weekData = await axios.get(weekUrl);
-    // console.log("🚀 ~ getWeather ~ weekData:", weekData);2025-06-03
+
     // const todaystr = new Date().toISOString().slice(0, 10); //UTCになっているので、９時間前の日時になる
     const todaystr = new Date()
       .toLocaleString("ja-JP", {
@@ -32,14 +27,10 @@ const getWeather = async (req, res) => {
         day: "2-digit",
       })
       .replace(/\//g, "-");
-    console.log("🚀 ~ getWeather ~ todaystr:", todaystr);
+
     const todayList = weekData.data.list.filter((item) =>
       item.dt_txt.startsWith(todaystr)
     );
-
-    // console.log("🚀 ~ getWeather ~ data:", data.data.weather[0].main);
-    // console.log("🚀 ~ getWeather ~ data:", data.data.main.temp_max);
-    // console.log("🚀 ~ getWeather ~ data:", data.data.main.temp_min);
 
     const weatherIconMap = {
       Thunderstorm: "⛈️", // 雷雨
@@ -66,11 +57,6 @@ const getWeather = async (req, res) => {
       parseFloat(data.data.main.temp_min.toFixed(1)) + "度";
     const icon = weatherIconMap[data.data.weather[0].main];
 
-    // console.log("🚀 ~ getWeather ~ weather:", weather);
-    // console.log("🚀 ~ getWeather ~ maxTemperature:", maxTemperature);
-    // console.log("🚀 ~ getWeather ~ minTemperature:", minTemperature);
-    // console.log("🚀 ~ getWeather ~ icon:", icon);
-
     //今日の朝夜のデータを配列で取得
     const todayFirstData = todayList[0].main.temp;
     const todayLastData = todayList[todayList.length - 1].main.temp;
@@ -93,7 +79,6 @@ const getWeather = async (req, res) => {
     const weekdayIndex = now.getDay();
     const weekday = weekdays[weekdayIndex];
     const formatted = `${month}/${day} (${weekday})`;
-    // console.log(formatted);
 
     return res.status(200).json({
       weather,

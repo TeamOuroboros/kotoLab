@@ -14,17 +14,25 @@ import {
 } from "@mui/material";
 import { ArrowBack, Home } from "@mui/icons-material";
 
+let parentfeeling = "";
+
 function ConfirmParent() {
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
   const [getdata, setgetdata] = useState([]);
 
   useEffect(() => {
-    async function getAllChildData() {
-      const response = await axios.get("/api/children");
-      setgetdata(response.data);
+    async function getParentState() {
+      const response = await axios.get("/api/log/parent");
+      parentfeeling = response.data.data[0].parent_feeling;
+
+      parentfeeling = parentfeeling.replace("{", "");
+      parentfeeling = parentfeeling.replace("}", "");
+      parentfeeling = parentfeeling.replace(/"/g, "");
+
+      setgetdata(response.data.data);
     }
 
-    getAllChildData();
+    getParentState();
   }, []);
 
   return (
@@ -41,45 +49,60 @@ function ConfirmParent() {
       }}
     >
       <Typography variant="h4" fontWeight={"bold"} textAlign={"center"} mb={8}>
-        子どもの確認
+        親の確認
       </Typography>
       <Stack spacing={2} width={"100%"}>
-        {getdata.length === 0 ? (
-          <>
-            <Typography variant="body1" textAlign={"center"} mb={8}>
-              登録された子どもがいません
-            </Typography>
-            <Button
-              sx={{ fontWeight: "bold", mt: 20 }}
-              onClick={() => navigate("/register/children")}
+        {
+          <Card
+            variant="outlined"
+            sx={{ bgcolor: "#EDEDED", borderRadius: 3, boxShadow: "none" }}
+          >
+            <CardContent
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
             >
-              子供を登録する
-            </Button>
-          </>
-        ) : (
-          getdata.map((info) => (
-            <Card
-              key={info.id}
-              variant="outlined"
-              sx={{ bgcolor: "#EDEDED", borderRadius: 3, boxShadow: "none" }}
-            >
-              <CardContent
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                <Box sx={{ width: "100%", maxWidth: 240 }}>
-                  <Typography fontSize={"1.1rem"}>👶{info.name}</Typography>
-                  <Typography fontSize={"1.1rem"}>
-                    🗓️{info.birthday.slice(0, 10)}
-                  </Typography>
-                </Box>
-              </CardContent>
-            </Card>
-          ))
-        )}
+              <Box sx={{ width: "100%", maxWidth: 240 }}>
+                <Typography fontSize={"1.1rem"}>
+                  名前:{getdata[0]?.name}
+                </Typography>
+                <Typography fontSize={"1.1rem"}>
+                  😃状態:{parentfeeling}
+                </Typography>
+              </Box>
+            </CardContent>
+          </Card>
+
+          // getdata.map((info) => {
+          //   return (
+          //     <Card
+          //       key={info.id}
+          //       variant="outlined"
+          //       sx={{ bgcolor: "#EDEDED", borderRadius: 3, boxShadow: "none" }}
+          //     >
+          //       <CardContent
+          //         sx={{
+          //           display: "flex",
+          //           flexDirection: "column",
+          //           alignItems: "center",
+          //         }}
+          //       >
+          //         <Box sx={{ width: "100%", maxWidth: 240 }}>
+          //           <Typography fontSize={"1.1rem"}>name:{info.name}</Typography>
+          //           {/* <Typography fontSize={"1.1rem"}>
+          //             😃状態:{" "}
+          //             {state?.child_state
+          //               ? state.child_state
+          //               : "記録がありません"}
+          //           </Typography> */}
+          //         </Box>
+          //       </CardContent>
+          //     </Card>
+          //   );
+          // })
+        }
       </Stack>
 
       {/* 左下 */}

@@ -43,7 +43,6 @@ const feelings = [
 function Feeling() {
   const [selected, setSelected] = useState([]);
   const navigate = useNavigate(); //フック。関数などイベント内で動的に遷移。
-  //   console.log("🚀 ~ FeelingOfParents ~ selected:", selected);
 
   const setFeeling = (feeling) => {
     setSelected((prev) =>
@@ -54,7 +53,6 @@ function Feeling() {
   };
 
   const submitFeeling = async () => {
-    // console.log(selected);
     try {
       await axios.post("/api/log/parent", {
         parent_feeling: selected,

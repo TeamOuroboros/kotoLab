@@ -37,8 +37,6 @@ function ChildRegister() {
   };
 
   const genderChange = async (e, newGender) => {
-    // console.log("🚀 ~ ChildRegister ~ gender:", e, newGender);
-
     if (newGender !== null) {
       setGender(newGender);
     }

@@ -32,7 +32,6 @@ module.exports = {
   },
 
   async childrenState(insertData) {
-    console.log("childrenStateには来ているよ");
     return await db("users")
       .innerJoin("children", function () {
         this.on("children.user_id", "=", "users.id");
@@ -43,5 +42,14 @@ module.exports = {
       .select("children_id", "birthday", "child_state", "log_child.created_at")
       .where({ user_id: insertData })
       .orderBy("created_at", "desc");
+  },
+  async parentState(paernt_id) {
+    return await db("users")
+      .innerJoin("log", function () {
+        this.on("log.user_id", "=", "users.id");
+      })
+      .select("log.id", "name", "parent_feeling")
+      .where({ user_id: paernt_id })
+      .orderBy("log.created_at", "desc");
   },
 };

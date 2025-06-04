@@ -14,7 +14,6 @@ import { Home, ArrowBack } from "@mui/icons-material";
 
 function Proposal() {
   const location = useLocation();
-  console.log("💀 ~ Proposal ~ location:", location);
 
   const contactResult = location.state.resText || "データ取得に失敗しました";
   const [text, setText] = useState([]);
@@ -36,13 +35,10 @@ function Proposal() {
   // テキストの詳細を表示する関数
   const detail = () => {
     const regex = /##\s*詳細\s*[\r\n]+([\s\S]*?)(?=(?:^#\s*提案|\s*$))/gm;
-    console.log("💀 ~ detail ~ regex:", regex);
     const result = [];
     let match;
-    console.log("💀 ~ detail ~ markdown:", markdown);
 
     while ((match = regex.exec(markdown))) {
-      console.log("💀 ~ detail ~ match:", match);
       result.push(match[1].trim());
     }
     setText(result);
@@ -100,7 +96,6 @@ function Proposal() {
   //要約表示時にマウント
   useEffect(() => {
     summary(contactResult);
-    console.log("🚀 ~ useEffect ~ contactResult:", contactResult);
   }, []);
 
   return (

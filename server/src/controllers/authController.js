@@ -73,15 +73,7 @@ const logout = async (req, res) => {
 const register = async (req, res) => {
   try {
     const { mail, password, name, address, lat, lon } = req.body;
-    console.log(
-      "🚀 ~ register ~ mail, password, name, address, lat, lon:",
-      mail,
-      password,
-      name,
-      address,
-      lat,
-      lon
-    );
+
     if (!validation(mail, password, name, address, lat, lon)) {
       return res.status(400).json({ message: "フィールドが欠損しています" });
     }

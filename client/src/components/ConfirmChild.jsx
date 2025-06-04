@@ -29,7 +29,6 @@ function ConfirmChild() {
     }
     getAllChildData();
   }, []);
-  console.log("🚀 ~ getdata.map ~ childState:", childState);
 
   return (
     <Container
