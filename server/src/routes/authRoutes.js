@@ -32,12 +32,14 @@ router.get("/google", (req, res, next) => {
 const frontUrl = process.env.FRONT_URL || "/";
 router.get(
   "/google/callback",
+  (req, res, next) => {
+    console.log("callbackルートに来た");
+    next();
+  },
   passport.authenticate("google", {
     failureRedirect: frontUrl, //認証失敗後、ここにリダイレクト
   }),
   async (req, res) => {
-    // console.log("🚀 ~ req:", req.user);
-    //セッショントークンをsessionsに入れる
     const token = crypto.randomBytes(16).toString("hex");
     const expires_at = new Date(Date.now() + 1000 * 60 * 60); // 1000ms×60秒×60分で１時間の期限設定
     await Session.insSession({ token, user_id: req.user.id, expires_at });
@@ -47,6 +49,7 @@ router.get(
       sameSite: "Lax",
       expires: expires_at,
     });
+
     res.redirect(`${frontUrl}register/children`);
   }
 );

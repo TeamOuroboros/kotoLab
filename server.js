@@ -24,6 +24,11 @@ app.use(
   })
 );
 
+// app.use((req, res, next) => {
+//   console.log(`[${req.method}] ${req.url}`);
+//   next();
+// });
+
 const isProduction = process.env.NODE_ENV === "production";
 
 const session = require("express-session");
@@ -71,7 +76,6 @@ app.get("/confirmchild", (req, res) => {
 app.get("/confirmparent", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-
 // -------------
 
 // app.listen(PORT, () => {

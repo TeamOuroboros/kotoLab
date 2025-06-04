@@ -1,6 +1,7 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../../../.env") });
 const User = require("../models/Users");
 
 passport.use(
@@ -17,7 +18,7 @@ passport.use(
         const email = profile.email;
         const username = profile.displayName;
 
-        const exitUser = await User.findUser(email);
+        let exitUser = await User.findUser(email);
 
         //なければusersテーブルに登録
         if (!exitUser) {
