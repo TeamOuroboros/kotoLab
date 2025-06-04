@@ -17,11 +17,17 @@ const userRouter = require("./server/src/routes/userRoutes");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONT_URL,
+    credentials: true,
+  })
+);
 
 const isProduction = process.env.NODE_ENV === "production";
 
 const session = require("express-session");
+
 app.use(
   session({
     secret: "keyboard cat",
@@ -33,6 +39,16 @@ app.use(
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use("/api/auth", authRouter);
+app.use("/api/children", childrenRouter);
+app.use("/api/log", logRouter);
+
+app.use("/api/children", childrenRouter);
+app.use("/api/contact", contactRouter);
+app.use("/api/weather", weatherRouter);
+app.use("/api/user", userRouter);
+
 // dist 配信-----
 app.use(express.static(path.join(__dirname, "/public")));
 app.get("/login", (req, res) => {
@@ -55,15 +71,6 @@ app.get("/confirmchild", (req, res) => {
 });
 
 // -------------
-
-app.use("/api/auth", authRouter);
-app.use("/api/children", childrenRouter);
-app.use("/api/log", logRouter);
-
-app.use("/api/children", childrenRouter);
-app.use("/api/contact", contactRouter);
-app.use("/api/weather", weatherRouter);
-app.use("/api/user", userRouter);
 
 // app.listen(PORT, () => {
 // 	console.log(`Server running on port ${PORT}`);

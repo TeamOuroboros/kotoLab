@@ -158,7 +158,21 @@ function App() {
       {/* 設定ボタン */}
 
       <Box display={"flex"} justifyContent={"flex-end"} mt={8}>
-        <IconButton onClick={goToSettings}>
+        <IconButton
+          onClick={goToSettings}
+          sx={{
+            position: "fixed",
+            bottom: 250,
+            right: 16,
+            color: "#544739",
+            width: 48,
+            height: 48,
+            borderRadius: "50%",
+            "&:hover": {
+              bgcolor: "#A0BEB5",
+            },
+          }}
+        >
           <MdSettings />
         </IconButton>
       </Box>

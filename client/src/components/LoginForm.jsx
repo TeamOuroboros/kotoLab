@@ -15,6 +15,7 @@ import {
   FormControl,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
@@ -48,7 +49,8 @@ function LoginForm() {
 
   const backUrl = import.meta.env.VITE_BACKEND_URL;
   const googleLogin = () => {
-    window.location.href = `${backUrl}/api/auth/google`;
+    // window.location.href = `${backUrl}/api/auth/google`;
+    window.location.href = `/api/auth/google`;
   };
 
   return (
@@ -124,6 +126,25 @@ function LoginForm() {
         </Stack>
       </Box>
       <Button onClick={googleLogin}>Googleでログイン</Button>
+      {/* 左下 */}
+      <IconButton
+        onClick={() => navigate(-1)}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          left: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <ArrowBack />
+      </IconButton>
     </Container>
   );
 }

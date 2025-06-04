@@ -21,12 +21,13 @@ router.post("/login", login);
 router.post("/logout", logout);
 router.post("/register", register);
 
-router.get(
-  "/google",
+router.get("/google", (req, res, next) => {
+  console.log("/api/auth/googleにアクセスされました");
+
   passport.authenticate("google", {
     scope: ["email", "profile"],
-  })
-);
+  })(req, res, next);
+});
 
 const frontUrl = process.env.FRONT_URL || "/";
 router.get(

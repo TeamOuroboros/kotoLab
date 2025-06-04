@@ -15,7 +15,9 @@ import {
   MenuItem,
   ListSubheader,
   OutlinedInput,
+  IconButton,
 } from "@mui/material";
+import { ArrowBack } from "@mui/icons-material";
 
 function RegisterForm() {
   const [username, setUsername] = useState("");
@@ -152,6 +154,25 @@ function RegisterForm() {
           </Box>
         </Stack>
       </Box>
+      {/* 左下 */}
+      <IconButton
+        onClick={() => navigate(-1)}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          left: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <ArrowBack />
+      </IconButton>
     </Container>
   );
 }
