@@ -18,11 +18,21 @@ const getWeather = async (req, res) => {
     // console.log("🚀 ~ getWeather ~ url:", url);
 
     const data = await axios.get(url);
+    // console.log("🚀 ~ getWeather ~ data:", data);
 
     //拡張性持たせるために作成しました　1Wの天気予報を取得しています 今は今朝と今晩の気温を算出しています
     const weekUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=metric&lang=ja&appid=${apiKey}`;
     const weekData = await axios.get(weekUrl);
-    const todaystr = new Date().toISOString().slice(0, 10);
+    // console.log("🚀 ~ getWeather ~ weekData:", weekData);2025-06-03
+    // const todaystr = new Date().toISOString().slice(0, 10); //UTCになっているので、９時間前の日時になる
+    const todaystr = new Date()
+      .toLocaleString("ja-JP", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      })
+      .replace(/\//g, "-");
+    console.log("🚀 ~ getWeather ~ todaystr:", todaystr);
     const todayList = weekData.data.list.filter((item) =>
       item.dt_txt.startsWith(todaystr)
     );
@@ -55,6 +65,11 @@ const getWeather = async (req, res) => {
     const minTemperature =
       parseFloat(data.data.main.temp_min.toFixed(1)) + "度";
     const icon = weatherIconMap[data.data.weather[0].main];
+
+    // console.log("🚀 ~ getWeather ~ weather:", weather);
+    // console.log("🚀 ~ getWeather ~ maxTemperature:", maxTemperature);
+    // console.log("🚀 ~ getWeather ~ minTemperature:", minTemperature);
+    // console.log("🚀 ~ getWeather ~ icon:", icon);
 
     //今日の朝夜のデータを配列で取得
     const todayFirstData = todayList[0].main.temp;

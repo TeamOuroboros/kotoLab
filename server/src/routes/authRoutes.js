@@ -1,8 +1,12 @@
+const path = require("path");
+require("dotenv").config({ path: path.resolve(__dirname, "../../../.env") });
 const express = require("express");
 const passport = require("passport");
 require("./../controllers/passport"); //passport.jsの設定の読み込み
 const crypto = require("crypto");
 const Session = require("../models/Sessions");
+
+const isProduction = process.env.NODE_ENV === "production";
 
 const router = express.Router();
 const {
@@ -16,19 +20,6 @@ const { authenticate } = require("./authMiddleware");
 router.post("/login", login);
 router.post("/logout", logout);
 router.post("/register", register);
-
-const session = require("express-session");
-router.use(
-  session({
-    secret: "keyboard cat",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: false, httpOnly: true },
-  })
-);
-
-router.use(passport.initialize());
-router.use(passport.session());
 
 router.get(
   "/google",
@@ -51,11 +42,11 @@ router.get(
     await Session.insSession({ token, user_id: req.user.id, expires_at });
     res.cookie("session_token", token, {
       httpOnly: true,
-      // secure: isProduction,
+      secure: isProduction,
       sameSite: "Lax",
       expires: expires_at,
     });
-    res.redirect(`${frontUrl}main`);
+    res.redirect(`${frontUrl}register/children`);
   }
 );
 

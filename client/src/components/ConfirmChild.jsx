@@ -10,6 +10,7 @@ import {
   IconButton,
   Card,
   CardContent,
+  Button,
 } from "@mui/material";
 import { ArrowBack, Home } from "@mui/icons-material";
 
@@ -42,71 +43,84 @@ function ConfirmChild() {
       <Typography variant="h4" fontWeight={"bold"} textAlign={"center"} mb={8}>
         子どもの確認
       </Typography>
-
       <Stack spacing={2} width={"100%"}>
-        {getdata.map((info) => (
-          <Card
-            key={info.id}
-            variant="outlined"
-            sx={{ bgcolor: "#EDEDED", borderRadius: 3, boxShadow: "none" }}
-          >
-            <CardContent
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
+        {getdata.length === 0 ? (
+          <>
+            <Typography variant="body1" textAlign={"center"} mb={8}>
+              登録された子どもがいません
+            </Typography>
+            <Button
+              sx={{ fontWeight: "bold", mt: 20 }}
+              onClick={() => navigate("/register/children")}
             >
-              <Box sx={{ width: "100%", maxWidth: 240 }}>
-                <Typography fontSize={"1.1rem"}>👶{info.name}</Typography>
-                <Typography fontSize={"1.1rem"}>
-                  🗓️{info.birthday.slice(0, 10)}
-                </Typography>
-              </Box>
-            </CardContent>
-          </Card>
-        ))}
-
-        {/* 左下 */}
-        <IconButton
-          onClick={() => navigate(-1)}
-          sx={{
-            position: "fixed",
-            bottom: 16,
-            left: 16,
-            bgcolor: "#B1CDC4",
-            color: "#544739",
-            width: 48,
-            height: 48,
-            borderRadius: "50%",
-            "&:hover": {
-              bgcolor: "#A0BEB5",
-            },
-          }}
-        >
-          <ArrowBack />
-        </IconButton>
-
-        {/* 右下 */}
-        <IconButton
-          onClick={() => navigate("/main")}
-          sx={{
-            position: "fixed",
-            bottom: 16,
-            right: 16,
-            bgcolor: "#B1CDC4",
-            color: "#544739",
-            width: 48,
-            height: 48,
-            borderRadius: "50%",
-            "&:hover": {
-              bgcolor: "#A0BEB5",
-            },
-          }}
-        >
-          <Home />
-        </IconButton>
+              子供を登録する
+            </Button>
+          </>
+        ) : (
+          getdata.map((info) => (
+            <Card
+              key={info.id}
+              variant="outlined"
+              sx={{ bgcolor: "#EDEDED", borderRadius: 3, boxShadow: "none" }}
+            >
+              <CardContent
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <Box sx={{ width: "100%", maxWidth: 240 }}>
+                  <Typography fontSize={"1.1rem"}>👶{info.name}</Typography>
+                  <Typography fontSize={"1.1rem"}>
+                    🗓️{info.birthday.slice(0, 10)}
+                  </Typography>
+                </Box>
+              </CardContent>
+            </Card>
+          ))
+        )}
       </Stack>
+
+      {/* 左下 */}
+      <IconButton
+        onClick={() => navigate(-1)}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          left: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <ArrowBack />
+      </IconButton>
+
+      {/* 右下 */}
+      <IconButton
+        onClick={() => navigate("/main")}
+        sx={{
+          position: "fixed",
+          bottom: 16,
+          right: 16,
+          bgcolor: "#B1CDC4",
+          color: "#544739",
+          width: 48,
+          height: 48,
+          borderRadius: "50%",
+          "&:hover": {
+            bgcolor: "#A0BEB5",
+          },
+        }}
+      >
+        <Home />
+      </IconButton>
     </Container>
   );
 }
