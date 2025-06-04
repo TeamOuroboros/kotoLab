@@ -1,4 +1,5 @@
 // import { StrictMode } from "react";
+import { registerSW } from "virtual:pwa-register";
 import { createRoot } from "react-dom/client";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import theme from "./theme";
@@ -16,6 +17,8 @@ import App from "./App.jsx";
 import Proposal from "./components/Proposal.jsx";
 import State from "./components/State.jsx";
 import ConfirmChild from "./components/ConfirmChild";
+
+registerSW();
 
 createRoot(document.getElementById("root")).render(
   <ThemeProvider theme={theme}>
