@@ -44,7 +44,6 @@ app.use("/api/auth", authRouter);
 app.use("/api/children", childrenRouter);
 app.use("/api/log", logRouter);
 
-app.use("/api/children", childrenRouter);
 app.use("/api/contact", contactRouter);
 app.use("/api/weather", weatherRouter);
 app.use("/api/user", userRouter);
