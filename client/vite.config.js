@@ -30,6 +30,14 @@ export default defineConfig({
           },
         ],
       },
+      workbox: {
+        // ✅ ここが追加部分
+        navigateFallback: "/index.html",
+        navigateFallbackDenylist: [
+          /^\/api\//, // API全般（サーバー処理はReactに吸わせない）
+          /^\/auth\//, // 認証系（Google callback含む）
+        ],
+      },
     }),
   ],
   server: {

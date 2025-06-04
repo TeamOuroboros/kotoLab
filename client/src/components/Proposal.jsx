@@ -7,6 +7,7 @@ import {
   Stack,
   IconButton,
   Paper,
+  CircularProgress,
 } from "@mui/material";
 import axios from "axios";
 import { Home, ArrowBack } from "@mui/icons-material";
@@ -18,6 +19,7 @@ function Proposal() {
   const [text, setText] = useState([]);
   const [markdown, setMarkdown] = useState(contactResult);
   const [isDetailShown, setIsDetailShown] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   // テキストの要約を表示する関数
   const summary = (markdownText) => {
@@ -54,6 +56,8 @@ function Proposal() {
   // 再提案のためもう一度 /api/contact を呼び出す
   const contactRequestProposal = async () => {
     try {
+      setIsLoading(true); //開始時にローディング
+
       const res = await axios.post(
         "/api/contact",
         {
@@ -81,6 +85,8 @@ function Proposal() {
       // goToProposal();
     } catch (error) {
       console.error("❌contactRequest", error);
+    } finally {
+      setIsLoading(false); //完了時にローディングOFF
     }
   };
 
@@ -150,8 +156,13 @@ function Proposal() {
           variant="contained"
           sx={{ height: 50, fontWeight: "bold", bgcolor: "#bcd4c1" }}
           onClick={contactRequestProposal}
+          disabled={isLoading}
         >
-          再提案
+          {isLoading ? (
+            <CircularProgress size={24} color="inherit" />
+          ) : (
+            "再提案"
+          )}
         </Button>
       </Stack>
 
