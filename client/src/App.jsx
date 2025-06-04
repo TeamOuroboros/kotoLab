@@ -4,7 +4,14 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import { sendAiMode } from "./components/Suggetion";
 
-import { Box, Typography, Button, Stack, IconButton } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Button,
+  Stack,
+  IconButton,
+  CircularProgress,
+} from "@mui/material";
 
 function App() {
   const [weather, setWeather] = useState("Clear");
@@ -14,6 +21,7 @@ function App() {
   const [todayFist, setFistData] = useState({});
   const [todayLast, setLastData] = useState({});
   const [formatted, setformatted] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   function goToFeeling() {
@@ -56,6 +64,7 @@ function App() {
 
   const contactRequest = async () => {
     try {
+      setIsLoading(true); //開始時にローディング
       const res = await axios.post(
         "/api/contact",
         {
@@ -83,6 +92,8 @@ function App() {
       // goToProposal();
     } catch (error) {
       console.error("❌contactRequest", error.response || error);
+    } finally {
+      setIsLoading(false); //完了時にローディングOFF
     }
   };
   useEffect(() => {
@@ -129,8 +140,13 @@ function App() {
               height: 60,
               borderRadius: 50,
             }}
+            disabled={isLoading}
           >
-            提案
+            {isLoading ? (
+              <CircularProgress size={24} color="inherit" />
+            ) : (
+              "提案"
+            )}
           </Button>
           <Button
             onClick={goToFeeling}
@@ -152,7 +168,7 @@ function App() {
           onClick={goToSettings}
           sx={{
             position: "fixed",
-            bottom: 250,
+            bottom: 16,
             right: 16,
             color: "#544739",
             width: 48,

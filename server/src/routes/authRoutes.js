@@ -32,6 +32,10 @@ router.get("/google", (req, res, next) => {
 const frontUrl = process.env.FRONT_URL || "/";
 router.get(
   "/google/callback",
+  (req, res, next) => {
+    console.log("callbackルートに来た");
+    next();
+  },
   passport.authenticate("google", {
     failureRedirect: frontUrl, //認証失敗後、ここにリダイレクト
   }),
@@ -47,6 +51,7 @@ router.get(
       sameSite: "Lax",
       expires: expires_at,
     });
+
     res.redirect(`${frontUrl}register/children`);
   }
 );
