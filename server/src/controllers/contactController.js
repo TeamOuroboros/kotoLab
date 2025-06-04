@@ -11,11 +11,12 @@ const { format, subDays } = require("date-fns");
 let aIMode;
 let initPrompt;
 const contactGemini = async (req, res) => {
+  let chidstate = "";
   console.log("hello1");
   try {
     const userID = req.user.id;
     const today = format(new Date(), "yyyy-MM-dd");
-    const { weather, maxTemperture, minTemperture, sendAiMode } = req.body;
+    const { weather, maxTemperature, minTemperature, sendAiMode } = req.body;
 
     const todayForCalc = new Date();
     //注：setDataを使うとtodayForCalcも演算されるので注意
@@ -28,26 +29,9 @@ const contactGemini = async (req, res) => {
       "yyyy-MM-dd"
     );
 
-    // #TODO 提案が初回か2回目以降かチェックする（2回目以降であれば履歴取得してそれ用のプロンプト作成）
-
-    // #TODO 居住地に県を含めるか？
     const address = await userModel
       .findUser(req.user.mail)
       .then((data) => data.address);
-
-    console.log("🚀 ~ contactGemini ~ weather:", weather);
-    console.log("🚀 ~ contactGemini ~ maxTemperture:", maxTemperture);
-    console.log("🚀 ~ contactGemini ~ minTemperture:", minTemperture);
-
-    console.log("💀 ~ contactGemini ~ sendAiMode:", sendAiMode);
-    console.log("🚀 ~ contactGemini ~ userID:", userID);
-    console.log("🚀 ~ contactGemini ~ today:", today);
-    console.log("💀 ~ contactGemini ~ yesterday:", yesterday);
-    console.log(
-      "💀 ~ contactGemini ~ theDayBeforeYesterday:",
-      theDayBeforeYesterday
-    );
-    console.log("🚀 ~ contactGemini ~ address:", address);
 
     //提案モードの切替
     if (sendAiMode === "おまかせ") {
@@ -61,53 +45,6 @@ const contactGemini = async (req, res) => {
     }
     console.log("💀 ~ contactGemini ~ aIMode:", aIMode);
 
-    // #TODO user.id と今日から三日分の日付でlogからデータ取ってくる
-    // ない日付のログはプロンプトに入れない　or 特になしっていうワードにする
-    // ここのlengthを変えると他も取得する日付が可変する
-    // 仮：Log.getID
-    //下記が元々のコード
-    // const logIDArr = Array.from({ length: 3 }, (_, i) => {
-    //   const targetDate = format(subDays(new Date(), i), "yyyy-MM-dd");
-    //   // logTableから取ってくる処理　基本的に1日に1回の記録なのでlog.idは１件（多分firstで取ってくるからない時はundefined）
-    //   return Log.getID(userID, targetDate);
-    // });
-    //findLogIdに変更 Promise.allにする
-    const logIDArr = await Promise.all(
-      Array.from({ length: 3 }, (_, i) => {
-        const targetDate = format(subDays(new Date(), i), "yyyy-MM-dd");
-        // Log.getID は async で "当該日付のログがあれば id、それ以外は undefined" を返す想定
-        return Log.findLogId(userID, targetDate);
-      })
-    );
-    console.log("🚀 ~ contactGemini ~ logIDArr:", logIDArr);
-
-    // userIDから子供一覧を取得しIDを抽出する
-    const childrenID = await Children.findFamilyChildren(userID).then((datas) =>
-      datas.map((data) => data.id)
-    );
-    // あり得ないけど（初回登録時に必ず子供情報を登録させるため）
-    if (childrenID.length === 0)
-      return res.status(400).json({ message: "子供情報が取得できません" });
-    console.log("🚀 ~ contactGemini ~ childrenID:", childrenID);
-
-    // #親の気分や子供の状態を取ってくる
-    // user_idがあれば親の特定は可能。あとはlogから該当のuse_idのfeelingを時系列順に並べて上から3個とる
-    //⚡️⚡️毎日ログをつけないユーザーは一旦放置
-
-    // const parentFeeling = await Promise.all(
-    //   Array.from({ length: logIDArr.length }, (_, i) => {
-    //     console.log("💀 ~ Array.from ~ logIDArr:", logIDArr);
-    //     // const logID = logIDArr[i];
-    //     const logID = logIDArr[0];
-
-    //     // logから情報取得
-    //     console.log("💀 ~ Array.from ~ logID:", logID);
-    //     if (!logID) {
-    //       return "特に何も無し";
-    //     }
-    //     return Log.feel(userID) ?? "特に何も無し";
-    //   })
-    // );
     //------------------------------親の感情取得-----------------------------------
     const selectDate = [];
     selectDate.push(today);
@@ -119,47 +56,49 @@ const contactGemini = async (req, res) => {
 
     const parentFeeling = await Log.feel(userID, selectDate);
     const logID = parentFeeling[0].id;
-    console.log("logID", logID);
-    console.log("💀 ~ contactGemini ~ parentFeeling:", parentFeeling);
-
-    console.log("💀 ~ contactGemini ~ selectDate:", selectDate);
 
     //2日前の感情取得(複数ある場合は一番最新のものを取得)
     for (const obj of parentFeeling) {
-      flag = false;
       if (
         format(obj.log_date, "yyyy-MM-dd") === theDayBeforeYesterday &&
-        flag === false
+        theDayBeforeYesterdayFeeeling === ""
       ) {
         theDayBeforeYesterdayFeeeling = obj.parent_feeling;
-        flag = true;
-      } else {
-        theDayBeforeYesterdayFeeeling = "特に何も無し";
       }
+    }
+
+    if (theDayBeforeYesterdayFeeeling === "") {
+      theDayBeforeYesterdayFeeeling = "特に何も無し";
     }
 
     //1日前の感情取得(複数ある場合は一番最新のものを取得)
     for (const obj of parentFeeling) {
-      flag = false;
-      if (format(obj.log_date, "yyyy-MM-dd") === yesterday && flag === false) {
+      if (
+        format(obj.log_date, "yyyy-MM-dd") === yesterday &&
+        yesterdayFeeeling === ""
+      ) {
         yesterdayFeeeling = obj.parent_feeling;
-        flag = true;
-      } else {
-        yesterdayFeeeling = "特に何も無し";
       }
+    }
+
+    if (yesterdayFeeeling === "") {
+      yesterdayFeeeling = "特に何も無し";
     }
 
     //今日の感情取得(複数ある場合は一番最新のものを取得)
     for (const obj of parentFeeling) {
-      flag = false;
-      if (format(obj.log_date, "yyyy-MM-dd") === today && flag === false) {
+      if (
+        format(obj.log_date, "yyyy-MM-dd") === today &&
+        todayFeeeling === ""
+      ) {
         todayFeeeling = obj.parent_feeling;
-        flag = true;
-      } else {
-        todayFeeeling = "特に何も無し";
       }
     }
+    if (todayFeeeling === "") {
+      todayFeeeling = "特に何も無し";
+    }
 
+    //文字列を整形({}を消す)
     theDayBeforeYesterdayFeeeling = theDayBeforeYesterdayFeeeling.replace(
       "{",
       ""
@@ -172,48 +111,101 @@ const contactGemini = async (req, res) => {
     yesterdayFeeeling = yesterdayFeeeling.replace("}", "");
     todayFeeeling = todayFeeeling.replace("{", "");
     todayFeeeling = todayFeeeling.replace("}", "");
-
     //--------------------------------------------------------------------------
 
-    // #TODO 子供の数だけ配列をどうするか検討 子供の状態はchildidで繰り返すか動的に処理
-    //   ```多分こうなる
-    // childState === [
-    //   [state1a, state1b, state1c], // 子供1人目の3日分のstate
-    //   [state2a, state2b, state2c], // 子供2人目の3日分のstate
-    // ]
-    // ```;
-    // がしかし非同期だった場合は全部Promiseの配列になるのでこっち⇩を使う
-    // const childState = await Promise.all(
-    //   childrenID.map(async (childID) => {
-    //     return Promise.all(
-    //       Array.from({ length: logIDArr.length }, async (_, i) => {
-    //         const logID = logIDArr[i];
-    //         if (!logID) {
-    //           return "特に何も無し";
-    //         }
-    //         const result = await Logchild.state(logID, childID);
-    //         return result ?? "特に何も無し";
-    //       })
-    //     );
-    //   })
-    // );
-    //⚡️⚡️多分Logchild.state定義していないからのちにやらないといけない
-    // const childState = childrenID.map((childID) => {
-    //   return Array.from({ length: logIDArr.length }, (_, i) => {
-    //     const logID = logIDArr[i];
-    //     // logから情報取得
-    //     if (!logID) {
-    //       return "特に何も無し";
-    //     }
-    //     return Logchild.state(logID, childID) ?? "特に何も無し";
-    //   });
-    // });
-    // console.log("🚀 ~ childState ~ childState:", childState);
+    //------------------------子どもの状態取得-----------------------------
+    const childrenstate = await Log.childrenState(userID);
+    let sendChilrenState = "";
 
-    // ⚡️⚡️initPromptは現在固定で問い合わせています。
+    const arrayChildren_id = [];
+
+    for (const obj of childrenstate) {
+      if (arrayChildren_id.indexOf(obj.children_id) === -1) {
+        arrayChildren_id.push(obj.children_id);
+      }
+    }
+
+    for (let i = 1; i <= arrayChildren_id.length; i++) {
+      let getageFlag = false;
+      let getFeelingFlag = false;
+      //i番目の子の年齢を取得
+      for (const obj of childrenstate) {
+        let calctoday = new Date();
+        if (
+          arrayChildren_id[i - 1] === obj.children_id &&
+          getageFlag === false
+        ) {
+          const age = calctoday.getFullYear() - obj.birthday.getFullYear();
+          sendChilrenState =
+            sendChilrenState +
+            ` \n- ${i}番目の子供の様子（直近3日）：\n  - 年齢：${age}`;
+          getageFlag = true;
+        }
+      }
+      getageFlag = false;
+
+      chidstate = "";
+      //i番目の子の2日前の状態を取得(複数ある場合は一番最新のものを取得)
+      for (const obj of childrenstate) {
+        if (
+          format(obj.created_at, "yyyy-MM-dd") === theDayBeforeYesterday &&
+          arrayChildren_id[i - 1] === obj.children_id &&
+          getFeelingFlag === false
+        ) {
+          chidstate = obj.child_state;
+          getFeelingFlag = true; //最新の情報が上書きされないため
+        }
+      }
+
+      if (chidstate === "") {
+        chidstate = "特に何も無し";
+      }
+      getFeelingFlag = false;
+      sendChilrenState = sendChilrenState + `\n  - 2日前：${chidstate}`;
+
+      chidstate = "";
+      //i番目の子の1日前の状態を取得(複数ある場合は一番最新のものを取得)
+      for (const obj of childrenstate) {
+        if (
+          format(obj.created_at, "yyyy-MM-dd") === yesterday &&
+          arrayChildren_id[i - 1] === obj.children_id &&
+          getFeelingFlag === false
+        ) {
+          chidstate = obj.child_state;
+          getFeelingFlag = true; //最新の情報が上書きされないため
+        }
+      }
+      if (chidstate === "") {
+        chidstate = "特に何も無し";
+      }
+      getFeelingFlag = false;
+      sendChilrenState = sendChilrenState + `\n  - 1日前：${chidstate}`;
+
+      chidstate = "";
+      //i番目の子の今日の状態を取得(複数ある場合は一番最新のものを取得)
+      for (const obj of childrenstate) {
+        if (
+          format(obj.created_at, "yyyy-MM-dd") === today &&
+          arrayChildren_id[i - 1] === obj.children_id &&
+          getFeelingFlag === false
+        ) {
+          chidstate = obj.child_state;
+          getFeelingFlag = true; //最新の情報が上書きされないため
+        }
+      }
+
+      if (chidstate === "") {
+        chidstate = "特に何も無し";
+      }
+      getFeelingFlag = false;
+      sendChilrenState = sendChilrenState + `\n  - 今日：${chidstate}`;
+    }
+    console.log("💀 ~ contactGemini ~ sendChilrenState:", sendChilrenState);
+
     console.log("💀 ~ contactGemini ~ aIMode:", aIMode);
 
-    initPrompt = `あなたは、親子の行動提案アシスタントです。
+    initPrompt =
+      `あなたは、親子の行動提案アシスタントです。
   \n以下の条件をもとに、今日親子でどう過ごすのが最適かを提案してください。
   また、外出する場合は、3つ程度のジャンルを絞り、それぞれの提案の理由が書かれた詳細もつけてください。
   \nまた、それぞれの提案に対して20文字程度で詳細理由を要約した文章をつけてください。
@@ -221,9 +213,10 @@ const contactGemini = async (req, res) => {
   \n出力はマークダウン形式でお願いします。フォーマットは以下の通りです。
   \n\n # 提案1 \n ##要約 \n ## 詳細 # 提案2 \n ##要約 \n ## 詳細 # 提案3\n ##要約 \n ## 詳細 \n
   \n【条件】
-  \n-居住地：${address}\n-日付：${today}\n- 今日の天気：${weather}\n- 最高気温：${maxTemperture}\n- 最低気温：${minTemperture}\n- 
-  子供の年齢：1歳,2歳\n- 親の状態（直近3日）：\n  - 2日前：${theDayBeforeYesterdayFeeeling}\n. - 1日前：${yesterdayFeeeling}\n  - 今日：${todayFeeeling}\n- 子供の様子（直近3日）：\n  - 3日前：体調が悪そう\n. - 2日前：ちょっと回復してきたね\n  - 1日前：フル調子じゃないけど元気！
-  \n  - 提案モード：${aIMode}\n  - 詳細の条件：改行はしないでください。午前と午後のおすすめを回答してください`;
+  \n-居住地：${address}\n-日付：${today}\n- 今日の天気：${weather}\n- 最高気温：${maxTemperature}\n- 最低気温：${minTemperature}
+  \n- 親の状態（直近3日）：\n  - 2日前：${theDayBeforeYesterdayFeeeling}\n. - 1日前：${yesterdayFeeeling}\n  - 今日：${todayFeeeling}` +
+      sendChilrenState +
+      `\n  - 提案モード：${aIMode}\n  - 詳細の条件：改行はしないでください。午前と午後のおすすめを回答してください`;
 
     const api = process.env.GEMINI_API || null;
 
@@ -254,13 +247,8 @@ const contactGemini = async (req, res) => {
         "Content-Type": "application/json",
       },
     });
-    console.log(
-      "🚀🚀🚀🚀🚀:",
-      response.data.candidates[0].content.parts[0].text
-    );
 
     const contactResult = response.data.candidates[0].content.parts[0].text;
-    console.log("🥇🥇🥇 ~ contactGemini ~ contactResult:", contactResult);
 
     //---------AIへの質問と反応をDBに登録する----------------------
 

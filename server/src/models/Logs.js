@@ -25,4 +25,18 @@ module.exports = {
       .whereIn("log_date", array)
       .orderBy("created_at", "desc");
   },
+
+  async childrenState(insertData) {
+    console.log("childrenStateには来ているよ");
+    return await db("users")
+      .innerJoin("children", function () {
+        this.on("children.user_id", "=", "users.id");
+      })
+      .innerJoin("log_child", function () {
+        this.on("log_child.children_id", "=", "children.id");
+      })
+      .select("children_id", "birthday", "child_state", "log_child.created_at")
+      .where({ user_id: insertData })
+      .orderBy("created_at", "desc");
+  },
 };

@@ -44,16 +44,7 @@ function App() {
       todayLast,
       formatted,
     } = resWeather.data;
-    // console.log(
-    //   "🚀 ~ handleSubmit ~ weather, maxTemperature, minTemperature:",
-    //   weather,
-    //   maxTemperature,
-    //   minTemperature,
-    //   icon,
-    //   todayFist,
-    //   todayLast,
-    //   formatted
-    // );
+
     setWeather(weather);
     setMaxTemperature(maxTemperature);
     setMinTemperature(minTemperature);
@@ -64,9 +55,6 @@ function App() {
   };
 
   const contactRequest = async () => {
-    console.log("hello2");
-    console.log("💀 ~ sendAiMode:", sendAiMode);
-
     try {
       const res = await axios.post(
         "/api/contact",
@@ -84,6 +72,8 @@ function App() {
           withCredentials: true,
         }
       );
+      console.log("💀 ~ contactRequest ~ weather:", weather);
+      console.log("💀 ~ contactRequest ~ weather:", weather);
       const resText = res.data.contactResult;
 
       // 成功したら画面遷移　　goToProposalらは一旦コメントアウト
