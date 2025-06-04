@@ -2,6 +2,8 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config({ path: path.resolve(__dirname, "./.env") });
+const passport = require("passport");
+require("./server/src/controllers/passport"); //passport.jsの設定の読み込み
 
 const app = express();
 const cookieParser = require("cookie-parser");
@@ -28,6 +30,9 @@ app.use(
     cookie: { secure: isProduction, httpOnly: true },
   })
 );
+
+app.use(passport.initialize());
+app.use(passport.session());
 // dist 配信-----
 app.use(express.static(path.join(__dirname, "/public")));
 app.get("/login", (req, res) => {

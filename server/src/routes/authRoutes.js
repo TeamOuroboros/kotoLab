@@ -21,9 +21,6 @@ router.post("/login", login);
 router.post("/logout", logout);
 router.post("/register", register);
 
-router.use(passport.initialize());
-router.use(passport.session());
-
 router.get(
   "/google",
   passport.authenticate("google", {
