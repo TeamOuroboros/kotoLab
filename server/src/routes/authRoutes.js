@@ -31,7 +31,6 @@ const frontUrl = process.env.FRONT_URL || "/";
 router.get(
   "/google/callback",
   (req, res, next) => {
-    console.log("callbackルートに来た");
     next();
   },
   passport.authenticate("google", {
