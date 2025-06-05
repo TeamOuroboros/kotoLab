@@ -96,6 +96,7 @@ function Proposal() {
   //要約表示時にマウント
   useEffect(() => {
     summary(contactResult);
+    setIsDetailShown(false);
   }, []);
 
   return (

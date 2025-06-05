@@ -77,12 +77,12 @@ function ConfirmChild() {
                   }}
                 >
                   <Box sx={{ width: "100%", maxWidth: 240 }}>
-                    <Typography fontSize={"1.1rem"}>👶{info.name}</Typography>
+                    <Typography fontSize={"1.1rem"}>👶 {info.name}</Typography>
                     <Typography fontSize={"1.1rem"}>
-                      🗓️{info.birthday.slice(0, 10)}
+                      🗓️ {info.birthday.slice(0, 10)}
                     </Typography>
                     <Typography fontSize={"1.1rem"}>
-                      😃状態:{" "}
+                      😃 状態:{" "}
                       {state?.child_state
                         ? state.child_state
                         : "記録がありません"}

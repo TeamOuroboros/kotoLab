@@ -66,42 +66,14 @@ function ConfirmParent() {
             >
               <Box sx={{ width: "100%", maxWidth: 240 }}>
                 <Typography fontSize={"1.1rem"}>
-                  名前:{getdata[0]?.name}
+                  👤 {getdata[0]?.name}
                 </Typography>
                 <Typography fontSize={"1.1rem"}>
-                  😃状態:{parentfeeling}
+                  😃 状態:{parentfeeling}
                 </Typography>
               </Box>
             </CardContent>
           </Card>
-
-          // getdata.map((info) => {
-          //   return (
-          //     <Card
-          //       key={info.id}
-          //       variant="outlined"
-          //       sx={{ bgcolor: "#EDEDED", borderRadius: 3, boxShadow: "none" }}
-          //     >
-          //       <CardContent
-          //         sx={{
-          //           display: "flex",
-          //           flexDirection: "column",
-          //           alignItems: "center",
-          //         }}
-          //       >
-          //         <Box sx={{ width: "100%", maxWidth: 240 }}>
-          //           <Typography fontSize={"1.1rem"}>name:{info.name}</Typography>
-          //           {/* <Typography fontSize={"1.1rem"}>
-          //             😃状態:{" "}
-          //             {state?.child_state
-          //               ? state.child_state
-          //               : "記録がありません"}
-          //           </Typography> */}
-          //         </Box>
-          //       </CardContent>
-          //     </Card>
-          //   );
-          // })
         }
       </Stack>
 
